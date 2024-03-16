@@ -12,12 +12,9 @@ export default function Dashboard() {
   const [detailsClick, setDetailsClick] = useState(false);
 
   return (
+
     <>
-      {detailsClick && <OrderDetailsPage />}
-      {!detailsClick && (
-        <div className="bg-white dark:bg-gray-900">
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
+      <div className="flex items-center justify-between px-6 py-4 border-b">
             <div className="flex space-x-4">
               <MenuIcon className="text-gray-600 dark:text-gray-300" />
               <h1 className="text-xl font-semibold">Order Management</h1>
@@ -43,6 +40,11 @@ export default function Dashboard() {
               </Toggle>
             </div>
           </div>
+      {detailsClick && <OrderDetailsPage />}
+      {!detailsClick && (
+        <div className="bg-white dark:bg-gray-900">
+        <div className="flex flex-col">
+          
           <div className="flex items-center justify-between px-6 py-2">
             <div className="flex space-x-2">
               <ListIcon className="text-gray-600 dark:text-gray-300" />
