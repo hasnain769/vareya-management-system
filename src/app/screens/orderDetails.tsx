@@ -4,8 +4,19 @@ import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
+import { OrderType } from "@/utils/types"
 
-export default function OrderDetailsPage() {
+interface OrderDetailsPageProps {
+  item: OrderType;
+}
+
+export default function OrderDetailsPage({ item }: OrderDetailsPageProps) {
+  // Ensure item is not undefined
+  if (!item) {
+    return <div>No item data available.</div>;
+  }
+  const data :OrderType = item
+  
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -97,14 +108,14 @@ export default function OrderDetailsPage() {
         <div className="w-full lg:w-3/4 p-4">
           <Card className="mb-4">
             <CardHeader>
-              <CardTitle>Order Summary - 00006403</CardTitle>
+              <CardTitle>Order Summary - {item.id}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <div className="font-bold">Jessica Carvajal</div>
+                  <div className="font-bold">{item.shop_name}</div>
                   <div className="mt-1">
-                    <div>Account: Jessica Carvajal</div>
+                    <div>Account: {item.shop_name}</div>
                     <div>SFCC Store Site ID</div>
                     <div>SFCC Username</div>
                     <div>Home Phone: (956) 467-7057</div>
@@ -183,17 +194,17 @@ export default function OrderDetailsPage() {
                     <TableHead>City</TableHead>
                     <TableHead>State/Province</TableHead>
                     <TableHead>Zip</TableHead>
-                    <TableHead>Description</TableHead>
+                    
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Jessica Carvajal</TableCell>
-                    <TableCell>2204 Rio Mesa Dr</TableCell>
-                    <TableCell>Austin</TableCell>
-                    <TableCell>TX</TableCell>
-                    <TableCell>78732</TableCell>
-                    <TableCell>Ground Delivery Method</TableCell>
+                    <TableCell>{item.shop_name}</TableCell>
+                    <TableCell>{item.shipping_address.address1}</TableCell>
+                    <TableCell>{data.shipping_address?.city}</TableCell>
+                    <TableCell>{item.shipping_address.state}</TableCell>
+                    <TableCell>{item.shipping_address.zip}</TableCell>
+                    
                   </TableRow>
                 </TableBody>
               </Table>

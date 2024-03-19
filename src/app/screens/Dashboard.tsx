@@ -13,12 +13,14 @@ import { OrderType } from "@/utils/types";
 export default function Dashboard() {
   console.log("dashboard loaded")
   const[orders , setorders]=useState<OrderType[]>([])
-  const orderss = useStore((state) => state.orders);
-  const fetchOrders = useStore((state) => state.fetchOrders);
+  const [detailsClick, setDetailsClick] = useState(false);
+  const [currentItem,setcurrentItem]= useState<OrderType>()
+  // const orderss = useStore((state) => state.orders);
+  // const fetchOrders = useStore((state) => state.fetchOrders);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      await fetchOrders()
+
       try {
         const response  = await fetch('http://localhost:3000/api/ordersDetails');
       
@@ -35,7 +37,10 @@ export default function Dashboard() {
 
     fetchOrders();
   }, []);
-  const [detailsClick, setDetailsClick] = useState(false);
+  function handleDetailshow(item:OrderType){
+        setcurrentItem(item)
+        setDetailsClick(true)
+  }
  
   return (
 
@@ -66,7 +71,7 @@ export default function Dashboard() {
               </Toggle>
             </div>
           </div>
-      {detailsClick && <OrderDetailsPage />}
+      {detailsClick && <OrderDetailsPage item={currentItem}/>}
       {!detailsClick && (
         <div className="bg-white dark:bg-gray-900">
         <div className="flex flex-col">
@@ -93,7 +98,7 @@ export default function Dashboard() {
               {
                 orders.map((item :OrderType)=>(
 
-                <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>setDetailsClick(!detailsClick)}>
+                <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)}>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell>
