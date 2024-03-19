@@ -6,11 +6,37 @@ import { Input } from "@/components/ui/input";
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import OrderDetailsPage from "./orderDetails";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useStore } from "@/store";
+import { OrderType } from "@/utils/types";
 
 export default function Dashboard() {
-  const [detailsClick, setDetailsClick] = useState(false);
+  console.log("dashboard loaded")
+  const[orders , setorders]=useState<OrderType[]>([])
+  const orderss = useStore((state) => state.orders);
+  const fetchOrders = useStore((state) => state.fetchOrders);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      await fetchOrders()
+      try {
+        const response  = await fetch('http://localhost:3000/api/ordersDetails');
+      
+        if (!response.ok) {
+          console.log("error fetching orders")
+          throw new Error('Failed to fetch orders');
+        }
+        const data = await response.json();
+        setorders(data);
+      } catch (error) {
+        console.log('Error fetching orders:', error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+  const [detailsClick, setDetailsClick] = useState(false);
+ 
   return (
 
     <>
@@ -64,13 +90,18 @@ export default function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+              {
+                orders.map((item :OrderType)=>(
+
                 <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>setDetailsClick(!detailsClick)}>
-                  <TableCell className="font-medium">00006403</TableCell>
-                  <TableCell>Jessica Carvajal</TableCell>
-                  <TableCell>Waiting to Fulfill</TableCell>
-                  <TableCell>9/22/2021, 7:40 AM</TableCell>
+                  <TableCell className="font-medium">{item.order_number}</TableCell>
+                  <TableCell>{item.shop_name}</TableCell>
+                  <TableCell>{item.fulfillment_status}</TableCell>
+                  <TableCell>{item.order_date}</TableCell>
                   <TableCell>$217.34</TableCell>
                 </TableRow>
+                ))
+              }
               </TableBody>
             </Table>
           </div>
