@@ -22,7 +22,7 @@ export default function Dashboard() {
     const fetchOrders = async () => {
 
       try {
-        const response  = await fetch('http://localhost:3000/api/ordersDetails');
+        const response  = await fetch('http://localhost:3000/api/orders-details');
       
         if (!response.ok) {
           console.log("error fetching orders")
@@ -71,7 +71,7 @@ export default function Dashboard() {
               </Toggle>
             </div>
           </div>
-      {detailsClick && <OrderDetailsPage item={currentItem}/>}
+      {detailsClick && <OrderDetailsPage item ={currentItem}/>}
       {!detailsClick && (
         <div className="bg-white dark:bg-gray-900">
         <div className="flex flex-col">
