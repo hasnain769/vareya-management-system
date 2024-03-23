@@ -1,0 +1,120 @@
+{
+  "id": "6b0e56c4-60e0-4c43-8be9-1b143536d387",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "order_allocated": {
+      "name": "order_allocated",
+      "schema": "",
+      "columns": {
+        "order_number": {
+          "name": "order_number",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ready_to_ship": {
+          "name": "ready_to_ship",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order_uuid": {
+          "name": "order_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "order_packed_out": {
+      "name": "order_packed_out",
+      "schema": "",
+      "columns": {
+        "order_serial_no": {
+          "name": "order_serial_no",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order_number": {
+          "name": "order_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tote_uuid": {
+          "name": "tote_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "order_packed_out_order_number_order_allocated_order_number_fk": {
+          "name": "order_packed_out_order_number_order_allocated_order_number_fk",
+          "tableFrom": "order_packed_out",
+          "tableTo": "order_allocated",
+          "columnsFrom": [
+            "order_number"
+          ],
+          "columnsTo": [
+            "order_number"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "order_packed_out_tote_uuid_tote_complete_tote_uuid_fk": {
+          "name": "order_packed_out_tote_uuid_tote_complete_tote_uuid_fk",
+          "tableFrom": "order_packed_out",
+          "tableTo": "tote_complete",
+          "columnsFrom": [
+            "tote_uuid"
+          ],
+          "columnsTo": [
+            "tote_uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "tote_complete": {
+      "name": "tote_complete",
+      "schema": "",
+      "columns": {
+        "tote_uuid": {
+          "name": "tote_uuid",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

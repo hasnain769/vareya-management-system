@@ -71,7 +71,7 @@ export default function Dashboard() {
               </Toggle>
             </div>
           </div>
-      {detailsClick && <OrderDetailsPage item ={currentItem}/>}
+      {detailsClick && <OrderDetailsPage item ={currentItem as any}/>}
       {!detailsClick && (
         <div className="bg-white dark:bg-gray-900">
         <div className="flex flex-col">
