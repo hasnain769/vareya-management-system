@@ -5,18 +5,29 @@ import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { OrderType } from "@/utils/types"
+import { orderstatus } from "@/database/dbOperations"
+import { useEffect, useState } from "react"
 
 interface OrderDetailsPageProps {
   item: OrderType;
 }
 
-export default function OrderDetailsPage({ item }: OrderDetailsPageProps) {
-  // Ensure item is not undefined
+export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
+  
+  const [status ,setstatus] = useState<any>("")
+  useEffect(()=>{
+    const fetchstatus =async ()=>{
+      const result  = await orderstatus(item.id)
+      setstatus(result)
+    }
+    fetchstatus()
+  },[])
+  
   if (!item) {
     return <div>No item data available.</div>;
   }
   const data :OrderType = item
-  
+  console.log(status)
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -161,22 +172,14 @@ export default function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <TableBody>
                   <TableRow>
                     <TableCell>Shipping</TableCell>
-                    <TableCell>Allocated</TableCell>
+                    <TableCell>{status[0].order_status}</TableCell>
                     <TableCell>1</TableCell>
                     <TableCell>$7.99</TableCell>
                     <TableCell>$0.00</TableCell>
                     <TableCell>$0.40</TableCell>
                     <TableCell>$8.39</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell>Men's Flight Jacket</TableCell>
-                    <TableCell>Allocated</TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>$199.00</TableCell>
-                    <TableCell>$0.00</TableCell>
-                    <TableCell>$9.95</TableCell>
-                    <TableCell>$208.95</TableCell>
-                  </TableRow>
+                  
                 </TableBody>
               </Table>
             </CardContent>

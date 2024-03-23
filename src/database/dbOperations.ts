@@ -1,4 +1,5 @@
 import { db } from '@/database';
+import { eq } from 'drizzle-orm';
 import {
     orderPackedOutType,
     order_allocated,
@@ -8,7 +9,7 @@ import {
     toteCompleteType,
  
 } from '@/database/schema';
-import { eq } from 'drizzle-orm';
+
 import { Pool } from '@neondatabase/serverless';
 //import { logger } from '@/utils/logger'
 
@@ -16,26 +17,22 @@ import { Pool } from '@neondatabase/serverless';
 const client = new Pool()
 
 
-// // export async function getAllShipmentDetails(): Promise<ShipmentDetailsType[]> {
-// //   try {
-// //     // Assume db.select().from() is an async operation and await its result.
-// //     const response = await db.select().from(shipmentDetails);
+export async function orderstatus(id : string): Promise<any> {
+  console.log(id)
+  try {
+    // Assume db.select().from() is an async operation and await its result.
+    const response = await db.select().from(order_packed_out).where(eq(order_packed_out.order_uuid, id)).execute();
+    console.log("hit")
+    console.log(response)
 
-// //     // Check if response is truthy and not empty. Adjust based on your ORM's response structure.
-// //     if (!response || response.length === 0) {
-// //       // Option 1: Return an empty array if no data found.
-// //       return [];
-
-// //     }
-
-//     return response as ShipmentDetailsType[];
-//   } catch (error: unknown) {
-//     if (error instanceof Error) {
-//       logger.error(error.message);
-//     }
-//     throw error;
-//   }
-// }
+    return response 
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      //logger.error(error.message);
+    }
+    throw error;
+  }
+ }
 
 
 export async function insertOrderAllocate(data: orderAllocatedType): Promise<void> {

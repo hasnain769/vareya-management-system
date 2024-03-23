@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
     // Extract the GraphQL response data
     const graphqlData = await graphqlResponse.json();
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
-    console.log(ordersData)
+    //console.log(ordersData)
     return NextResponse.json(ordersData);
   } catch (error : any) {
     // If an error occurs during the process, return an error response
