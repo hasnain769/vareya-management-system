@@ -37,6 +37,7 @@ export async function orderstatus(id : string): Promise<any> {
 
 export async function insertOrderAllocate(data: orderAllocatedType): Promise<void> {
   try {
+    console.log(db)
     await db.insert(order_allocated).values(data)
 
     //logger.info("added order allocated status :");
@@ -69,8 +70,9 @@ export async function insertTote(data: any): Promise<void> {
     }
   }
   export async function insertOrderPackedOut(data: orderPackedOutType): Promise<void> {
+    console.log("first")
     try {
-      await db.insert(order_packed_out).values(data)
+      await db.insert(order_packed_out).values(data).execute()
   
       //logger.info("added order allocated status :");
   
@@ -78,9 +80,10 @@ export async function insertTote(data: any): Promise<void> {
   
   
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        //logger.error("An error occurred while inserting a new shipment into the database:", { errors: error.message });
-      }
+        console.log(error)
+        if (error instanceof Error) {
+          //logger.error("An error occurred while inserting a new shipment into the database:", { errors: error.message });
+        }
       throw error;
     }
   }

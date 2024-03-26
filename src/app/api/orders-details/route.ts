@@ -29,45 +29,71 @@ export async function GET(req: NextRequest) {
     // Define the GraphQL query
     const graphqlQuery = `{
       orders(order_date_from: "2024-02-01T00:00:00",
-             order_date_to: "2024-02-01T23:59:59") {
-        complexity
-        request_id
-        data {
-          pageInfo {
-            hasNextPage
-            startCursor
-            endCursor
-            hasPreviousPage
-          }
-          edges {
-            node {
-              id
-              legacy_id
-              shop_name
-              order_number
-              fulfillment_status
-              order_date
-              holds {
-                fraud_hold
-                payment_hold
-                operator_hold
-                address_hold
-                shipping_method_hold
-                client_hold
+        order_date_to: "2024-02-01T00:15:00") {
+          complexity
+          request_id
+          data(first: 10) {
+              pageInfo {
+                  hasNextPage
+                  startCursor
+                  endCursor
+                  hasPreviousPage
               }
-              shipping_address {
-                address1
-                address2
-                city
-                state
-                zip
-                country
+              edges {
+                  node {
+                      id
+                      legacy_id
+                      shop_name
+                      account_id
+                      profile
+                      email
+                      order_number
+                      fulfillment_status
+                      order_date
+                      total_tax
+                      subtotal
+                      total_price
+                      total_discounts
+                      holds {
+                        fraud_hold
+                        payment_hold
+                        operator_hold
+                        address_hold
+                        shipping_method_hold
+                        client_hold
+                      }
+                      shipping_address {
+                          address1
+                          address2
+                          city
+                          state
+                          zip
+                          country
+                      }
+                  billing_address{
+                    address1
+                    address2
+                    state
+                    country
+                    country_code
+                  }
+                     
+                  line_items {
+                    edges {
+                      node {
+                        id
+                        product_name
+                        quantity
+                        price
+                      }
+                    }
+                    
+                  }
+                  }
               }
-            }
           }
-        }
       }
-    }`;
+  }`;
 
     // Make a POST request to the GraphQL API endpoint with the access token in the header
     const graphqlResponse = await fetch("https://public-api.shiphero.com/graphql", {
@@ -86,6 +112,7 @@ export async function GET(req: NextRequest) {
 
     // Extract the GraphQL response data
     const graphqlData = await graphqlResponse.json();
+    console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
     //console.log(ordersData)
     return NextResponse.json(ordersData);

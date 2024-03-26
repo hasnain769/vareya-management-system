@@ -8,13 +8,14 @@ import { Button } from "@/components/ui/button";
 import OrderDetailsPage from "./orderDetails";
 import { useEffect, useState } from "react";
 import { useStore } from "@/store";
-import { OrderType } from "@/utils/types";
+import { OrderData } from "@/utils/types";
+//import { OrderType } from "@/utils/types";
 
 export default function Dashboard() {
   console.log("dashboard loaded")
-  const[orders , setorders]=useState<OrderType[]>([])
+  const[orders , setorders]=useState<OrderData[]>([])
   const [detailsClick, setDetailsClick] = useState(false);
-  const [currentItem,setcurrentItem]= useState<OrderType>()
+  const [currentItem,setcurrentItem]= useState<OrderData>()
   // const orderss = useStore((state) => state.orders);
   // const fetchOrders = useStore((state) => state.fetchOrders);
 
@@ -37,7 +38,7 @@ export default function Dashboard() {
 
     fetchOrders();
   }, []);
-  function handleDetailshow(item:OrderType){
+  function handleDetailshow(item:OrderData){
         setcurrentItem(item)
         setDetailsClick(true)
   }
@@ -96,7 +97,7 @@ export default function Dashboard() {
               </TableHeader>
               <TableBody>
               {
-                orders.map((item :OrderType)=>(
+                orders.map((item :OrderData)=>(
 
                 <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)}>
                   <TableCell className="font-medium">{item.order_number}</TableCell>

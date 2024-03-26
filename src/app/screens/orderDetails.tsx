@@ -4,20 +4,21 @@ import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import { OrderType } from "@/utils/types"
+import { OrderData } from "@/utils/types"
 import { orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
 
 interface OrderDetailsPageProps {
-  item: OrderType;
+  item: OrderData;
 }
 
 export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
+  console.log(item)
   
   const [status ,setstatus] = useState<any>("")
   useEffect(()=>{
     const fetchstatus =async ()=>{
-      const result  = await orderstatus(item.id)
+      const result  = await orderstatus(item.id as any)
       setstatus(result)
     }
     fetchstatus()
@@ -26,7 +27,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
   if (!item) {
     return <div>No item data available.</div>;
   }
-  const data :OrderType = item
+ 
   console.log(status)
   return (
     <div className="bg-white">
@@ -40,23 +41,20 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>$199.00</span>
+                  <span>${item.subtotal}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Order Adjustments</span>
-                  <span>$0.00</span>
+                  <span>Discount</span>
+                  <span>{item.total_discounts}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>$7.99</span>
-                </div>
+                
                 <div className="flex justify-between">
                   <span>Tax</span>
-                  <span>$10.35</span>
+                  <span>${item.total_tax}</span>
                 </div>
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>$217.34</span>
+                  <span>${item.total_price}</span>
                 </div>
               </div>
             </CardContent>
@@ -126,21 +124,20 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <div>
                   <div className="font-bold">{item.shop_name}</div>
                   <div className="mt-1">
-                    <div>Account: {item.shop_name}</div>
-                    <div>SFCC Store Site ID</div>
-                    <div>SFCC Username</div>
-                    <div>Home Phone: (956) 467-7057</div>
-                    <div>Email: jessica.carvajal@salesforce.com</div>
+                    <div>Account: {item.profile}</div>
+                  
+                    <div>Email: {item.email}</div>
                     <div>SFCC Customer Number</div>
-                    <div>SFCC Customer ID</div>
+                    <div>SFCC Customer ID : {item.account_id}</div>
                   </div>
                 </div>
                 <div>
                   <div className="font-bold">Billing Address</div>
                   <div className="mt-1">
-                    <div>2204 Rio Mesa Dr</div>
-                    <div>Austin, TX 78732</div>
-                    <div>US</div>
+                    <div>{item.billing_address?.address1}</div>
+                    <div>{item.billing_address?.address2}</div>
+                    <div>{item.billing_address?.state}</div>
+                    <div>{item.billing_address?.country}{item.billing_address?.zip}</div>
                   </div>
                   <div className="font-bold mt-4">Sales Channel</div>
                   <div className="mt-1">nto</div>
@@ -164,21 +161,22 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                     <TableHead>Status</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>Unit Price</TableHead>
-                    <TableHead>Line Adjustments</TableHead>
-                    <TableHead>Tax</TableHead>
-                    <TableHead>Line Total</TableHead>
+
                   </TableRow>
                 </TableHeader>
                 <TableBody>
+                  {
+                    item.line_items?.edges.map((lineItem) =>(
+
                   <TableRow>
-                    <TableCell>Shipping</TableCell>
-                    <TableCell>{status[0].order_status}</TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>$7.99</TableCell>
-                    <TableCell>$0.00</TableCell>
-                    <TableCell>$0.40</TableCell>
-                    <TableCell>$8.39</TableCell>
+                    <TableCell>{lineItem.node.product_name}</TableCell>
+                    <TableCell>{item.fulfillment_status}</TableCell>
+                    <TableCell>{lineItem.node.quantity}</TableCell>
+                    <TableCell>${lineItem.node.price}</TableCell>
+
                   </TableRow>
+                    ))
+                  }
                   
                 </TableBody>
               </Table>
@@ -203,10 +201,10 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <TableBody>
                   <TableRow>
                     <TableCell>{item.shop_name}</TableCell>
-                    <TableCell>{item.shipping_address.address1}</TableCell>
-                    <TableCell>{data.shipping_address?.city}</TableCell>
-                    <TableCell>{item.shipping_address.state}</TableCell>
-                    <TableCell>{item.shipping_address.zip}</TableCell>
+                    <TableCell>{item.shipping_address?.address1}</TableCell>
+                    <TableCell>{item.shipping_address?.city}</TableCell>
+                    <TableCell>{item.shipping_address?.state}</TableCell>
+                    <TableCell>{item.shipping_address?.zip}</TableCell>
                     
                   </TableRow>
                 </TableBody>
@@ -229,13 +227,13 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
+                  {/* <TableRow>
                     <TableCell>Visa - 1111</TableCell>
                     <TableCell>Jessica Carvajal</TableCell>
                     <TableCell>$217.34</TableCell>
                     <TableCell>$0.00</TableCell>
                     <TableCell>$0.00</TableCell>
-                  </TableRow>
+                  </TableRow> */}
                 </TableBody>
               </Table>
             </CardContent>
