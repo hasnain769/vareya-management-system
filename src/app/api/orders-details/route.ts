@@ -1,3 +1,4 @@
+import { insertCompleteOrder } from '@/database/dbOperations';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -112,9 +113,16 @@ export async function GET(req: NextRequest) {
 
     // Extract the GraphQL response data
     const graphqlData = await graphqlResponse.json();
-    console.log(graphqlData)
+    // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
-    //console.log(ordersData)
+    // console.log(ordersData)
+    try {
+      await insertCompleteOrder(ordersData)
+    }
+    catch (error) {
+      console.log(error)
+    }
+    
     return NextResponse.json(ordersData);
   } catch (error : any) {
     // If an error occurs during the process, return an error response

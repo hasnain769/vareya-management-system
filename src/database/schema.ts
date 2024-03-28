@@ -60,6 +60,9 @@ export const order = pgTable('order', {
     id: serial("id").primaryKey(),
     legacy_id: integer('legacy_id'),
     shop_name: varchar('shop_name'),
+    account_id: varchar('account_id'),
+    profile: varchar('profile'),
+    email: varchar('email'),
     order_number: varchar('order_number'),
     fulfillment_status: varchar('fulfillment_status'),
     order_date: timestamp('order_date'),
@@ -67,11 +70,15 @@ export const order = pgTable('order', {
     subtotal: decimal('subtotal'),
     total_price: decimal('total_price'),
     total_discounts: decimal('total_discounts'),
-    shipping_address_id: integer('shipping_address_id').references(() => address.id, { onDelete: 'cascade' }),
     holds_id: integer('holds_id').references(() => holds.id, { onDelete: 'cascade' }),
-    status : varchar("status")
+    shipping_address_id: integer('shipping_address_id').references(() => address.id, { onDelete: 'cascade' }),
+    billing_address_id: integer('billing_address_id').references(() => address.id, { onDelete: 'cascade' }),
+    //pick : varchar("pick").references(() => order_allocated.order_number),
 });
-
+// export const status = pgTable('status',{
+//     id: serial("id").primaryKey(),
+//     order_number :
+// })
 export const shippingLabel = pgTable('shipping_label', {
     id: serial("id").primaryKey(),
     tracking_number: varchar('tracking_number'),
@@ -94,3 +101,9 @@ export const shipment = pgTable('shipment', {
 export type orderAllocatedType = typeof order_allocated.$inferInsert;
 export type toteCompleteType= typeof tote_complete.$inferInsert;
 export type orderPackedOutType = typeof order_packed_out.$inferInsert;
+export type AddressType = typeof address.$inferInsert;
+export type LineItemType = typeof lineItem.$inferInsert;
+export type HoldsType = typeof holds.$inferInsert;
+export type OrderType = typeof order.$inferInsert;
+export type ShippingLabelType = typeof shippingLabel.$inferInsert;
+export type ShipmentType = typeof shipment.$inferInsert;
