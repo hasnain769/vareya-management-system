@@ -215,9 +215,18 @@ export async function getaddresses(id: number) {
   return data
 }
 
-export async function getLineItems(orderId : number){
-  const data = await db.select().from(lineItem).where(eq(lineItem.order_id , orderId)).execute()
-  console.log(data)
-  return data
-
+export async function getLineItems(orderId: number) {
+  console.log(orderId);
+  try {
+    const data = await db
+      .select()
+      .from(lineItem)
+      .where(eq(lineItem.order_id, 12))
+   
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("Error fetching line items:", error);
+    return []; // Return an empty array in case of an error
+  }
 }

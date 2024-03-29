@@ -17,17 +17,18 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
   console.log(item)
   
   const [status ,setstatus] = useState<any>("")
-  const [address ,setaddress] = useState<any>()
-  //const [lineItems ,setLineItems] = useState<LineItemType[] | any>()
+  const [address ,setaddress] = useState<any[]>([])
+  const [LineItems ,setLineItems] = useState< any[]>([])
   useEffect(()=>{
     const fetchstatus =async ()=>{
       console.log("hitt")
-      const result  = await orderstatus(item.id as any)
+      //const result  = await orderstatus(item.id as any)
       const addr = await getaddresses(item.shipping_address_id as number)
-      //const lineitems = await getLineItems(item.id as number)
+      console.log(item.id)
+      const lineitems = await getLineItems(item.id as number)
       setaddress(addr)
-      setstatus(result)
-      //setLineItems(lineitems)
+      //setstatus(result)
+      setLineItems(lineitems)
     }
     fetchstatus()
   },[])
@@ -37,6 +38,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
   }
  
    console.log(address)
+   console.log(LineItems)
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -142,10 +144,10 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <div>
                   <div className="font-bold">Billing Address</div>
                   <div className="mt-1">
-                    <div>{address[0].address1}</div>
-                    <div>{address[0].address2}</div>
-                    <div>{address[0].state}</div>
-                    <div>{address[0].country}{address[0].zip}</div>
+                    <div>{address[0]?.address1}</div>
+                    <div>{address[0]?.address2}</div>
+                    <div>{address[0]?.state}</div>
+                    <div>{address[0]?.country}{address[0]?.zip}</div>
                   </div>
                   <div className="font-bold mt-4">Sales Channel</div>
                   <div className="mt-1">nto</div>
@@ -173,18 +175,18 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {/* {
-                    lineItems.map((lineItem : any) =>(
+                  {
+                    LineItems.map((LineItem : any) =>(
 
-                  <TableRow>
-                    <TableCell>{lineItem.node.product_name}</TableCell>
-                    <TableCell>{item.fulfillment_status}</TableCell>
-                    <TableCell>{lineItem.node.quantity}</TableCell>
-                    <TableCell>${lineItem.node.price}</TableCell>
+                  <TableRow key={LineItem.id}>
+                    <TableCell>{LineItem?.product_name}</TableCell>
+                    <TableCell>{item?.fulfillment_status}</TableCell>
+                    <TableCell>{LineItem?.quantity}</TableCell>
+                    <TableCell>${LineItem?.price}</TableCell>
 
                   </TableRow>
                     ))
-                  } */}
+                  }
                   
                 </TableBody>
               </Table>
@@ -209,10 +211,10 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <TableBody>
                   <TableRow>
                    
-                    <TableCell>{address[0].address1}</TableCell>
-                    <TableCell>{address[0].city}</TableCell>
-                    <TableCell>{address[0].state}</TableCell>
-                    <TableCell>{address[0].zip}</TableCell>
+                    <TableCell>{address[0]?.address1}</TableCell>
+                    <TableCell>{address[0]?.city}</TableCell>
+                    <TableCell>{address[0]?.state}</TableCell>
+                    <TableCell>{address[0]?.zip}</TableCell>
                     
                   </TableRow>
                 </TableBody>

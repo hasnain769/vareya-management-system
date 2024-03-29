@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { OrderType } from "./utils/types";
+//import { OrderType } from "./utils/types";
 
 
 
 type store = {
-  orders: OrderType[]
+  orders: any[]
   fetchOrders: () => void;
 
 };
