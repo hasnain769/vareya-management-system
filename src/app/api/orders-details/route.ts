@@ -1,4 +1,5 @@
 import { insertCompleteOrder } from '@/database/dbOperations';
+import { date } from 'drizzle-orm/mysql-core';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -27,13 +28,19 @@ export async function GET(req: NextRequest) {
     const refreshData = await refreshResponse.json();
     const accessToken = refreshData.access_token;
 
-    // Define the GraphQL query
+    const currentTime = new Date();
+    const ordersFromDate = new Date(currentTime.getTime() - 15 * 60000); // Subtract 15 minutes from current time
+    const ordersToDate = currentTime;
+
+    console.log(ordersFromDate.toISOString())
+    console.log(ordersToDate.toISOString())
+    // Define the GraphQL query with dynamic dates
     const graphqlQuery = `{
-      orders(order_date_from: "2024-02-01T00:00:00",
-        order_date_to: "2024-02-01T00:15:00") {
+      orders(order_date_from: "${ordersFromDate.toISOString()}",
+        order_date_to: "${ordersToDate.toISOString()}") {
           complexity
           request_id
-          data(first: 5) {
+          data(first: 100) {
               pageInfo {
                   hasNextPage
                   startCursor
@@ -79,17 +86,7 @@ export async function GET(req: NextRequest) {
                     country_code
                   }
                      
-                  line_items {
-                    edges {
-                      node {
-                        id
-                        product_name
-                        quantity
-                        price
-                      }
-                    }
-                    
-                  }
+                
                   }
               }
           }

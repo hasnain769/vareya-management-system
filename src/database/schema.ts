@@ -46,6 +46,13 @@ export const lineItem = pgTable('line_item', {
     quantity: integer('quantity'),
     price: decimal('price')
 });
+// export const shipment = pgTable('shipment', {
+//     id: serial("id").primaryKey(),
+//     order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' }),
+//     product_name: varchar('product_name'),
+//     quantity: integer('quantity'),
+//     price: decimal('price')
+// });
 
 export const holds = pgTable('holds', {
     id: serial("id").primaryKey(),
@@ -80,21 +87,21 @@ export const order = pgTable('order', {
 //     id: serial("id").primaryKey(),
 //     order_number :
 // })
-export const shippingLabel = pgTable('shipping_label', {
-    id: serial("id").primaryKey(),
-    tracking_number: varchar('tracking_number'),
-    tracking_url: text('tracking_url'),
-    shipping_method: varchar('shipping_method'),
-    shipping_name: varchar('shipping_name'),
-    status: varchar('status'),
-    shipment_id: integer('shipment_id').references(() => shipment.id, { onDelete: 'cascade' })
-});
+// export const shippingLabel = pgTable('shipping_label', {
+//     id: serial("id").primaryKey(),
+//     tracking_number: varchar('tracking_number'),
+//     tracking_url: text('tracking_url'),
+//     shipping_method: varchar('shipping_method'),
+//     shipping_name: varchar('shipping_name'),
+//     status: varchar('status'),
+//     shipment_id: integer('shipment_id').references(() => shipment.id, { onDelete: 'cascade' })
+// });
 
-export const shipment = pgTable('shipment', {
-    id: serial("id").primaryKey(),
-    total_packages: integer('total_packages'),
-    order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' })
-});
+// export const shipment = pgTable('shipment', {
+//     id: serial("id").primaryKey(),
+//     total_packages: integer('total_packages'),
+//     order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' })
+// });
 
 
 

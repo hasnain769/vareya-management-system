@@ -102,13 +102,18 @@ export async function insertTote(data: any): Promise<void> {
 
   import {  LineItemType, OrderType, ShippingLabelType, ShipmentType } from './schema';
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
-    // console.log(orderData);
+     console.log(ordersData);
     // try {
          await Promise.all(ordersData.map(async (ord: any) => {
           //const ord =ordersData[0]
             console.log(ord)
             // try {
                 // console.log("hit"),
+                const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number))
+                if(orderExist){
+                  console.log(`order with order number ${ord.order_number} exist in db`)
+                  return
+                }
                 const addressData: AddressType = {
                     address1: ord.shipping_address?.address1 || '',
                     address2: ord.shipping_address?.address2 || null,
@@ -155,17 +160,17 @@ export async function insertTote(data: any): Promise<void> {
                 const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
                 console.log(orderId)
 
-                await Promise.all(ord.line_items!.edges.map(async (Item: any) => {
-                  console.log(orderId[0].id)
-                    const lineItemData: LineItemType = {
-                        order_id: orderId[0].id as number,
-                        product_name: Item.node.product_name,
-                        quantity: Item.node.quantity,
-                        price: parseFloat(Item.node.price) as any
-                    };
-                    console.log(lineItemData)
-                    await db.insert(lineItem).values(lineItemData).execute()
-                }));
+                // await Promise.all(ord.line_items!.edges.map(async (Item: any) => {
+                //   console.log(orderId[0].id)
+                //     const lineItemData: LineItemType = {
+                //         order_id: orderId[0].id as number,
+                //         product_name: Item.node.product_name,
+                //         quantity: Item.node.quantity,
+                //         price: parseFloat(Item.node.price) as any
+                //     };
+                //     console.log(lineItemData)
+                //     await db.insert(lineItem).values(lineItemData).execute()
+                // }));
                 console.log("hit")
                 // if (ord.shipping_label) {
                 //     const shippingLabelData: ShippingLabelType = {
