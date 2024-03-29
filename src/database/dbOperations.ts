@@ -11,8 +11,7 @@ import {
     order,
     holds,
     lineItem,
-    shippingLabel,
-    shipment,
+ 
     AddressType,
     HoldsType,
 
@@ -100,7 +99,7 @@ export async function insertTote(data: any): Promise<void> {
   }
 
 
-  import {  LineItemType, OrderType, ShippingLabelType, ShipmentType } from './schema';
+  import {  LineItemType, OrderType } from './schema';
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
      console.log(ordersData);
     // try {
