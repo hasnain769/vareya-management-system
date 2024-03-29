@@ -109,7 +109,7 @@ export async function insertTote(data: any): Promise<void> {
             // try {
                 // console.log("hit"),
                 const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number))
-                if(orderExist){
+                if(orderExist.length > 0){
                   console.log(`order with order number ${ord.order_number} exist in db`)
                   return
                 }
