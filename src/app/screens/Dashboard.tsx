@@ -9,36 +9,35 @@ import OrderDetailsPage from "./orderDetails";
 import { useEffect, useState } from "react";
 import { useStore } from "@/store";
 import { OrderData } from "@/utils/types";
+import { OrderType } from "@/database/schema";
+import { getOrders } from "@/database/dbOperations";
 //import { OrderType } from "@/utils/types";
 
 export default function Dashboard() {
   console.log("dashboard loaded")
-  const[orders , setorders]=useState<OrderData[]>([])
+  const[orders , setorders]=useState<OrderType[]>([])
   const [detailsClick, setDetailsClick] = useState(false);
-  const [currentItem,setcurrentItem]= useState<OrderData>()
-  // const orderss = useStore((state) => state.orders);
-  // const fetchOrders = useStore((state) => state.fetchOrders);
+  const [currentItem,setcurrentItem]= useState<OrderType>()
+  const orderss = useStore((state) => state.orders);
+  const fetchOrders = useStore((state) => state.fetchOrders);
 
   useEffect(() => {
     const fetchOrders = async () => {
 
       try {
-        const response  = await fetch('http://localhost:3000/api/orders-details');
+        const response  = await getOrders()
+        console.log(response)
       
-        if (!response.ok) {
-          console.log("error fetching orders")
-          throw new Error('Failed to fetch orders');
-        }
-        const data = await response.json();
-        setorders(data);
+
+        setorders(response);
       } catch (error) {
         console.log('Error fetching orders:', error);
       }
     };
 
-    fetchOrders();
+     fetchOrders();
   }, []);
-  function handleDetailshow(item:OrderData){
+  function handleDetailshow(item:OrderType){
         setcurrentItem(item)
         setDetailsClick(true)
   }
@@ -97,13 +96,13 @@ export default function Dashboard() {
               </TableHeader>
               <TableBody>
               {
-                orders.map((item :OrderData)=>(
+                orders.map((item : OrderType)=>(
 
                 <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)}>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell>
-                  <TableCell>{item.order_date}</TableCell>
+                  <TableCell>{"item.order_date"}</TableCell>
                   <TableCell>$217.34</TableCell>
                 </TableRow>
                 ))

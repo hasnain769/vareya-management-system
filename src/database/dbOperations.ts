@@ -101,101 +101,123 @@ export async function insertTote(data: any): Promise<void> {
 
 
   import {  LineItemType, OrderType, ShippingLabelType, ShipmentType } from './schema';
+  export async function insertCompleteOrder(ordersData: any): Promise<void> {
+    // console.log(orderData);
+    // try {
+         await Promise.all(ordersData.map(async (ord: any) => {
+          //const ord =ordersData[0]
+            console.log(ord)
+            // try {
+                // console.log("hit"),
+                const addressData: AddressType = {
+                    address1: ord.shipping_address?.address1 || '',
+                    address2: ord.shipping_address?.address2 || null,
+                    city: ord.shipping_address?.city || '',
+                    state: ord.shipping_address?.state || '',
+                    zip: ord.shipping_address?.zip || '',
+                    country: ord.shipping_address?.country || ''
+                };
+
+                const addressId = await db.insert(address).values(addressData).returning({id :address.id})
+                console.log(addressId)
+                console.log(addressId)
+
+                const holdsData: HoldsType = {
+                    fraud_hold: ord.holds?.fraud_hold || false,
+                    payment_hold: ord.holds?.payment_hold || false,
+                    operator_hold: ord.holds?.operator_hold || false,
+                    address_hold: ord.holds?.address_hold || false,
+                    shipping_method_hold: ord.holds?.shipping_method_hold || false,
+                    client_hold: ord.holds?.client_hold || false
+                };
+
+                const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+                console.log(holdsData)
+                console.log(holdsId)
+
+                const orderData: OrderType = {
+                    shop_name: ord?.shop_name,
+                    account_id: ord?.account_id || '',
+                    profile: ord?.profile || '',
+                    email: ord?.email || '',
+                    order_number: ord?.order_number || '',
+                    fulfillment_status: ord.fulfillment_status || '',
+                    order_date: new Date(ord.order_date!),
+                    total_tax: parseFloat(ord.total_tax!) as any ,
+                    subtotal: parseFloat(ord.subtotal!) as any,
+                    total_price: parseFloat(ord.total_price!) as any, 
+                    total_discounts: parseFloat(ord.total_discounts!) as any,
+                    holds_id: holdsId[0].id ,
+                    shipping_address_id: addressId[0].id
+                };
+                console.log(orderData)
+
+                const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
+                console.log(orderId)
+
+                await Promise.all(ord.line_items!.edges.map(async (Item: any) => {
+                  console.log(orderId[0].id)
+                    const lineItemData: LineItemType = {
+                        order_id: orderId[0].id as number,
+                        product_name: Item.node.product_name,
+                        quantity: Item.node.quantity,
+                        price: parseFloat(Item.node.price) as any
+                    };
+                    console.log(lineItemData)
+                    await db.insert(lineItem).values(lineItemData).execute()
+                }));
+                console.log("hit")
+                // if (ord.shipping_label) {
+                //     const shippingLabelData: ShippingLabelType = {
+                //         tracking_number: ord.shipping_label.tracking_number,
+                //         tracking_url: ord.shipping_label.tracking_url,
+                //         shipping_method: ord.shipping_label.shipping_method,
+                //         shipping_name: ord.shipping_label.shipping_name,
+                //         status: ord.shipping_label.status,
+                //         shipment_id: orderId[0].id
+                //     };
+                //     await db.insert(shippingLabel).values(shippingLabelData).execute();
+                // }
+
+                // if (ord.shipment) {
+                //     const shipmentData: ShipmentType = {
+                //         total_packages: ord.shipment.total_packages,
+                //         order_id: orderId[0].id
+                //     };
+                //     console.log(shipmentData);
+                //     await db.insert(shipment).values(shipmentData).execute();
+                // }
+                
+                console.log(`Order with order number ${ord.order_number} inserted successfully.`);
+            // } catch (error: unknown) {
+            //     console.log(error)
+            // }
+        }));
+    // } catch (error) {
+    //     console.error('Error inserting complete order data:', error);
+    //     throw error;
+    // }
+    return
+
+}
+
+export async function getOrders() {
+ 
+  const data = await db.select().from(order)
   
-  export async function insertCompleteOrder(orderData: any[]): Promise<void> {
-    console.log(orderData);
-    try {
-      let i=0
-        for (const order of orderData) {
-            console.log(i);
-            i++
-            // Check if the order already exists
-            const existingOrder = await db.select().from(order).where(eq(order.order_number, order.order_number)).execute();
-            if (existingOrder.length > 0) {
-              console.log("hit")
-                console.log(`Order with order number ${order.order_number} already exists. Skipping insertion.`);
-                continue;
-            }
+  return data
+}
 
-            // Insert address data
-            const addressData: any = {
-                address1: order.shipping_address.address1,
-                address2: order.shipping_address.address2 || null,
-                city: order.shipping_address.city,
-                state: order.shipping_address.state,
-                zip: order.shipping_address.zip,
-                country: order.shipping_address.country
-            };
-            console.log(addressData);
-            const addressId = await db.insert(address).values(addressData).returning({ id: address.id }).execute();
+export async function getaddresses(id: number) {
+  console.log("hir")
+  const data = await db.select().from(address).where(eq(address.id , id)).execute()
+  console.log(data)
+  return data
+}
 
-            // Insert holds data
-            const holdsData: HoldsType = {
-                fraud_hold: order.holds.fraud_hold,
-                payment_hold: order.holds.payment_hold,
-                operator_hold: order.holds.operator_hold,
-                address_hold: order.holds.address_hold,
-                shipping_method_hold: order.holds.shipping_method_hold,
-                client_hold: order.holds.client_hold
-            };
-            const holdsId = await db.insert(holds).values(holdsData).returning({ id: holds.id }).execute();
+export async function getLineItems(orderId : number){
+  const data = await db.select().from(lineItem).where(eq(lineItem.order_id , orderId)).execute()
+  console.log(data)
+  return data
 
-            // Insert order data
-            const orderData: OrderType = {
-                legacy_id: order.legacy_id,
-                shop_name: order.shop_name,
-                account_id: order.account_id,
-                profile: order.profile,
-                email: order.email,
-                order_number: order.order_number,
-                fulfillment_status: order.fulfillment_status,
-                order_date: new Date(order.order_date),
-                total_tax: parseFloat(order.total_tax) as any,
-                subtotal: parseFloat(order.subtotal) as any,
-                total_price: parseFloat(order.total_price) as any,
-                total_discounts: parseFloat(order.total_discounts) as any,
-                holds_id: holdsId as any,
-                shipping_address_id: addressId as any
-            };
-            const orderId = await db.insert(order).values(orderData).returning({ id: order.id }).execute(); // This line seems to cause the issue
-
-            // Insert line items data
-            for (const lineItem of order.line_items.edges) {
-                const lineItemData: LineItemType = {
-                    order_id: orderId as any,
-                    product_name: lineItem.node.product_name,
-                    quantity: lineItem.node.quantity,
-                    price: parseFloat(lineItem.node.price) as any
-                };
-                await db.insert(lineItem).values(lineItemData).execute();
-            }
-
-            // Insert shipping label data if available
-            if (order.shipping_label) {
-                const shippingLabelData: ShippingLabelType = {
-                    tracking_number: order.shipping_label.tracking_number,
-                    tracking_url: order.shipping_label.tracking_url,
-                    shipping_method: order.shipping_label.shipping_method,
-                    shipping_name: order.shipping_label.shipping_name,
-                    status: order.shipping_label.status,
-                    shipment_id: orderId as any
-                };
-                await db.insert(shippingLabel).values(shippingLabelData).execute();
-            }
-
-            // Insert shipment data if available
-            if (order.shipment) {
-                const shipmentData: ShipmentType = {
-                    total_packages: order.shipment.total_packages,
-                    order_id: orderId as any
-                };
-                await db.insert(shipment).values(shipmentData).execute();
-            }
-
-            console.log(`Order with order number ${order.order_number} inserted successfully.`);
-        }
-    } catch (error) {
-        console.error('Error inserting complete order data:', error);
-        throw error;
-    }
 }

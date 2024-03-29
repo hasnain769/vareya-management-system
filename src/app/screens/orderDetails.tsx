@@ -5,21 +5,29 @@ import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { OrderData } from "@/utils/types"
-import { orderstatus } from "@/database/dbOperations"
+import { getLineItems, getaddresses, orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
+import { AddressType, LineItemType, OrderType } from "@/database/schema"
 
 interface OrderDetailsPageProps {
-  item: OrderData;
+  item: OrderType;
 }
 
 export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
   console.log(item)
   
   const [status ,setstatus] = useState<any>("")
+  const [address ,setaddress] = useState<any>()
+  //const [lineItems ,setLineItems] = useState<LineItemType[] | any>()
   useEffect(()=>{
     const fetchstatus =async ()=>{
+      console.log("hitt")
       const result  = await orderstatus(item.id as any)
+      const addr = await getaddresses(item.shipping_address_id as number)
+      //const lineitems = await getLineItems(item.id as number)
+      setaddress(addr)
       setstatus(result)
+      //setLineItems(lineitems)
     }
     fetchstatus()
   },[])
@@ -28,7 +36,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
     return <div>No item data available.</div>;
   }
  
-  console.log(status)
+   console.log(address)
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -134,10 +142,10 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 <div>
                   <div className="font-bold">Billing Address</div>
                   <div className="mt-1">
-                    <div>{item.billing_address?.address1}</div>
-                    <div>{item.billing_address?.address2}</div>
-                    <div>{item.billing_address?.state}</div>
-                    <div>{item.billing_address?.country}{item.billing_address?.zip}</div>
+                    <div>{address[0].address1}</div>
+                    <div>{address[0].address2}</div>
+                    <div>{address[0].state}</div>
+                    <div>{address[0].country}{address[0].zip}</div>
                   </div>
                   <div className="font-bold mt-4">Sales Channel</div>
                   <div className="mt-1">nto</div>
@@ -165,8 +173,8 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {
-                    item.line_items?.edges.map((lineItem) =>(
+                  {/* {
+                    lineItems.map((lineItem : any) =>(
 
                   <TableRow>
                     <TableCell>{lineItem.node.product_name}</TableCell>
@@ -176,7 +184,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
 
                   </TableRow>
                     ))
-                  }
+                  } */}
                   
                 </TableBody>
               </Table>
@@ -190,7 +198,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
+                   
                     <TableHead>Address</TableHead>
                     <TableHead>City</TableHead>
                     <TableHead>State/Province</TableHead>
@@ -200,11 +208,11 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell>{item.shop_name}</TableCell>
-                    <TableCell>{item.shipping_address?.address1}</TableCell>
-                    <TableCell>{item.shipping_address?.city}</TableCell>
-                    <TableCell>{item.shipping_address?.state}</TableCell>
-                    <TableCell>{item.shipping_address?.zip}</TableCell>
+                   
+                    <TableCell>{address[0].address1}</TableCell>
+                    <TableCell>{address[0].city}</TableCell>
+                    <TableCell>{address[0].state}</TableCell>
+                    <TableCell>{address[0].zip}</TableCell>
                     
                   </TableRow>
                 </TableBody>

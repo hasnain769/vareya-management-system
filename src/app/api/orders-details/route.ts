@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
         order_date_to: "2024-02-01T00:15:00") {
           complexity
           request_id
-          data(first: 10) {
+          data(first: 5) {
               pageInfo {
                   hasNextPage
                   startCursor
@@ -115,6 +115,7 @@ export async function GET(req: NextRequest) {
     const graphqlData = await graphqlResponse.json();
     // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
+    console.log(ordersData)
     // console.log(ordersData)
     try {
       await insertCompleteOrder(ordersData)

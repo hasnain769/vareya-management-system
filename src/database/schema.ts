@@ -35,7 +35,8 @@ export const address = pgTable('address', {
     city: varchar('city'),
     state: varchar('state'),
     zip: varchar('zip'),
-    country: varchar('country')
+    country: varchar('country'),
+    dummy : varchar('dummy')
 });
 
 export const lineItem = pgTable('line_item', {
