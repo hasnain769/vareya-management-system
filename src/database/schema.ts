@@ -113,5 +113,5 @@ export type AddressType = typeof address.$inferInsert;
 export type LineItemType = typeof lineItem.$inferInsert;
 export type HoldsType = typeof holds.$inferInsert;
 export type OrderType = typeof order.$inferInsert;
-export type ShippingLabelType = typeof shippingLabel.$inferInsert;
-export type ShipmentType = typeof shipment.$inferInsert;
+// export type ShippingLabelType = typeof shippingLabel.$inferInsert;
+// export type ShipmentType = typeof shipment.$inferInsert;
