@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { config } from 'dotenv';
+import { updateStatus } from '@/database/dbOperations';
 
 config();
 
@@ -30,9 +31,16 @@ export async function GET(req: NextRequest) : Promise<any> {
 
         // Handle different HTTP status codes
         if (response.status === 200) {
-            // Success response
             const data = response.data;
-            console.log(data); // Log the data received from the API
+            const extractedData = data.map((item:any) => {
+                return {
+                    barcode: item.Barcode,
+                    statusCode: item.Status.StatusCode,
+                    statusDescription: item.Status.StatusDescription
+                };
+            });
+            console.log(extractedData)
+            await updateStatus(extractedData) 
             return NextResponse.json(data);
         } 
     } catch (error) {

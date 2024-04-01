@@ -112,20 +112,22 @@ export async function insertTote(data: any): Promise<void> {
 
   import {  LineItemType, OrderType } from './schema';
   export async function updateStatus(data: any) {
-    // Loop through the data array and update each shipment
-    for (const item of data) {
+    console.log(data)
+    
+    await Promise.all(data.map(async (item: any) => {
         try {
             let statusDescription = ''; // Initialize statusDescription variable
             
-            // Check if Status object is present and contains StatusDescription
-            if (item.Status && item.Status.StatusDescription) {
-                statusDescription = item.Status.StatusDescription;
-            }
 
+            if (item.statusCode && item.statusDescription) {
+              
+                statusDescription = item.statusDescription;
+            }
+            console.log(statusDescription)
             // Update the status to StatusDescription
             const updatedShipment = await db.update(shipment)
                 .set({ status: statusDescription })
-                .where(eq(shipment.tracking_number, item.Barcode))
+                .where(eq(shipment.tracking_number, item.barcode))
                 
             
             console.log(`Updated status for shipment with barcode ${item.Barcode}`);
@@ -134,6 +136,7 @@ export async function insertTote(data: any): Promise<void> {
             console.error(`Failed to update status for shipment with barcode ${item.Barcode}: ${error}`);
         }
     }
+    ))
 }
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
      console.log(ordersData);``
@@ -143,7 +146,7 @@ export async function insertTote(data: any): Promise<void> {
             console.log(ord)
             // try {
                 // console.log("hit"),
-                const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number))
+                const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
                 if(orderExist.length > 0){
                   console.log(`order with order number ${ord.order_number} exist in db`)
                   return
