@@ -111,6 +111,30 @@ export async function insertTote(data: any): Promise<void> {
 
 
   import {  LineItemType, OrderType } from './schema';
+  export async function updateStatus(data: any) {
+    // Loop through the data array and update each shipment
+    for (const item of data) {
+        try {
+            let statusDescription = ''; // Initialize statusDescription variable
+            
+            // Check if Status object is present and contains StatusDescription
+            if (item.Status && item.Status.StatusDescription) {
+                statusDescription = item.Status.StatusDescription;
+            }
+
+            // Update the status to StatusDescription
+            const updatedShipment = await db.update(shipment)
+                .set({ status: statusDescription })
+                .where(eq(shipment.tracking_number, item.Barcode))
+                
+            
+            console.log(`Updated status for shipment with barcode ${item.Barcode}`);
+            console.log(updatedShipment); // Log the updated shipment data
+        } catch (error) {
+            console.error(`Failed to update status for shipment with barcode ${item.Barcode}: ${error}`);
+        }
+    }
+}
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
      console.log(ordersData);``
     // try {
