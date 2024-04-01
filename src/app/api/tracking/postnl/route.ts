@@ -9,15 +9,17 @@ export async function GET(req: NextRequest) : Promise<any> {
     const API_KEY = process.env.POSTNL_API_KEY;
     const  customernumber = process.env.CUSTOMER_NUMBER // Extracting customer number from path parameter
     try {
+        const currentTime = new Date();
+        const twelveHoursAgo = new Date(currentTime.getTime() - 12 * 60 * 60 * 1000);
+        const startTime = twelveHoursAgo.toISOString();
+        const endTime = currentTime.toISOString();
+
         // Construct the URL with query parameters
         const postnlTrackingUrlSandbox = `https://api.postnl.nl/shipment/v2/status/${customernumber}/updatedshipments`;
         
         // Construct the query parameters
         const queryParams = {
-            period: [
-                '2024-03-20T00:00:00',
-                '2024-03-20T23:59:59'
-            ]
+            period: [startTime, endTime]
         };
 
         // Fetch data from PostNL API with the API key included in the headers
