@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     console.log(order_number)
     console.log(tracking_number)
     console.log(shipping_carrier)
+    console.log(shipping_method)
 
 
     try {
