@@ -18,7 +18,7 @@ if (!databaseUrl) {
   throw new Error('Database connection string is missing. Please set DRIZZLE_DATABASE_URL environment variable.');
 }
 
-
+console.log(databaseUrl)
 const sql = neon(databaseUrl);
 //const response  =  fetch('http://localhost:3000/api/orders-details');
 // Create database instance using drizzle

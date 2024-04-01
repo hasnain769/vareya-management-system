@@ -1,5 +1,5 @@
 {
-  "id": "f7b38599-b07b-4e19-9f0e-c725e07e8c55",
+  "id": "70603e54-272f-40c4-8e79-fc9ed650effc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -46,6 +46,12 @@
         },
         "country": {
           "name": "country",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dummy": {
+          "name": "dummy",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -184,6 +190,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "account_id": {
+          "name": "account_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profile": {
+          "name": "profile",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "order_number": {
           "name": "order_number",
           "type": "varchar",
@@ -226,14 +250,20 @@
           "primaryKey": false,
           "notNull": false
         },
+        "holds_id": {
+          "name": "holds_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "shipping_address_id": {
           "name": "shipping_address_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "holds_id": {
-          "name": "holds_id",
+        "billing_address_id": {
+          "name": "billing_address_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -241,6 +271,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "order_holds_id_holds_id_fk": {
+          "name": "order_holds_id_holds_id_fk",
+          "tableFrom": "order",
+          "tableTo": "holds",
+          "columnsFrom": [
+            "holds_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "order_shipping_address_id_address_id_fk": {
           "name": "order_shipping_address_id_address_id_fk",
           "tableFrom": "order",
@@ -254,12 +297,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "order_holds_id_holds_id_fk": {
-          "name": "order_holds_id_holds_id_fk",
+        "order_billing_address_id_address_id_fk": {
+          "name": "order_billing_address_id_address_id_fk",
           "tableFrom": "order",
-          "tableTo": "holds",
+          "tableTo": "address",
           "columnsFrom": [
-            "holds_id"
+            "billing_address_id"
           ],
           "columnsTo": [
             "id"
@@ -319,6 +362,12 @@
           "name": "order_serial_no",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "order_number": {
+          "name": "order_number",
+          "type": "serial",
+          "primaryKey": false,
           "notNull": true
         },
         "order_id": {
@@ -392,114 +441,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "shipment": {
-      "name": "shipment",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "total_packages": {
-          "name": "total_packages",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "order_id": {
-          "name": "order_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "shipment_order_id_order_id_fk": {
-          "name": "shipment_order_id_order_id_fk",
-          "tableFrom": "shipment",
-          "tableTo": "order",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "shipping_label": {
-      "name": "shipping_label",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "tracking_number": {
-          "name": "tracking_number",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tracking_url": {
-          "name": "tracking_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "shipping_method": {
-          "name": "shipping_method",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "shipping_name": {
-          "name": "shipping_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "shipment_id": {
-          "name": "shipment_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "shipping_label_shipment_id_shipment_id_fk": {
-          "name": "shipping_label_shipment_id_shipment_id_fk",
-          "tableFrom": "shipping_label",
-          "tableTo": "shipment",
-          "columnsFrom": [
-            "shipment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "tote_complete": {
       "name": "tote_complete",
       "schema": "",
@@ -516,6 +457,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "order_number": {
+          "name": "order_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "varchar",
@@ -525,7 +472,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "tote_complete_order_number_order_allocated_order_number_fk": {
+          "name": "tote_complete_order_number_order_allocated_order_number_fk",
+          "tableFrom": "tote_complete",
+          "tableTo": "order_allocated",
+          "columnsFrom": [
+            "order_number"
+          ],
+          "columnsTo": [
+            "order_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

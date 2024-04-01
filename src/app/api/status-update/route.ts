@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
             
     
             // Extracting tote_uuid from the request body
-            const tote_uuid = body.totes[0].tote_uuid;
+            const {tote_uuid , order_number}= body.totes[0].tote_uuid;
             console.log(tote_uuid)
             const data ={
                 tote_uuid: tote_uuid,

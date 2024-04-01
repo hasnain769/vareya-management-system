@@ -8,14 +8,13 @@ export const order_allocated = pgTable('order_allocated', {
     order_id: integer('order_id'),
     ready_to_ship : boolean('ready_to_ship'),
     order_uuid : varchar('order_uuid'),
-
 });
 
 export const tote_complete = pgTable('tote_complete', {
     tote_id :serial("tote_id").primaryKey(),
     tote_uuid: varchar('tote_uuid'),
+    order_number: varchar('order_number').references(()=>order_allocated.order_number),
     status: varchar('status').default("packed")
-
 });
 
 
@@ -46,13 +45,14 @@ export const lineItem = pgTable('line_item', {
     quantity: integer('quantity'),
     price: decimal('price')
 });
-// export const shipment = pgTable('shipment', {
-//     id: serial("id").primaryKey(),
-//     order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' }),
-//     product_name: varchar('product_name'),
-//     quantity: integer('quantity'),
-//     price: decimal('price')
-// });
+export const shipment = pgTable('shipment', {
+    id: serial("id").primaryKey(),
+    order_number: varchar('order_number').references(() => order.order_number, { onDelete: 'cascade' }),
+    tracking_number: varchar('tracking_number'),
+    shipping_carrier: varchar('shipping_carrier'),
+    shipping_method: varchar('shipping_method') ,
+    status : varchar('status'),
+});
 
 export const holds = pgTable('holds', {
     id: serial("id").primaryKey(),
@@ -83,25 +83,8 @@ export const order = pgTable('order', {
     billing_address_id: integer('billing_address_id').references(() => address.id, { onDelete: 'cascade' }),
     //pick : varchar("pick").references(() => order_allocated.order_number),
 });
-// export const status = pgTable('status',{
-//     id: serial("id").primaryKey(),
-//     order_number :
-// })
-// export const shippingLabel = pgTable('shipping_label', {
-//     id: serial("id").primaryKey(),
-//     tracking_number: varchar('tracking_number'),
-//     tracking_url: text('tracking_url'),
-//     shipping_method: varchar('shipping_method'),
-//     shipping_name: varchar('shipping_name'),
-//     status: varchar('status'),
-//     shipment_id: integer('shipment_id').references(() => shipment.id, { onDelete: 'cascade' })
-// });
 
-// export const shipment = pgTable('shipment', {
-//     id: serial("id").primaryKey(),
-//     total_packages: integer('total_packages'),
-//     order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' })
-// });
+
 
 
 
@@ -114,4 +97,4 @@ export type LineItemType = typeof lineItem.$inferInsert;
 export type HoldsType = typeof holds.$inferInsert;
 export type OrderType = typeof order.$inferInsert;
 // export type ShippingLabelType = typeof shippingLabel.$inferInsert;
-// export type ShipmentType = typeof shipment.$inferInsert;
+export type ShipmentType = typeof shipment.$inferInsert;

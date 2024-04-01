@@ -11,9 +11,10 @@ import {
     order,
     holds,
     lineItem,
- 
+    shipment,
     AddressType,
     HoldsType,
+    ShipmentType,
 
  
 } from '@/database/schema';
@@ -98,10 +99,20 @@ export async function insertTote(data: any): Promise<void> {
     }
   }
 
+  export async function insertShipment(shipmentvalues : ShipmentType) {
+    try {
+      await db.insert(shipment).values(shipmentvalues).execute();
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
   import {  LineItemType, OrderType } from './schema';
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
-     console.log(ordersData);
+     console.log(ordersData);``
     // try {
          await Promise.all(ordersData.map(async (ord: any) => {
           //const ord =ordersData[0]
