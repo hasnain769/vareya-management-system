@@ -27,17 +27,18 @@ import { OrderData } from '@/utils/types';
 const client = new Pool()
 
 
-export async function orderstatus(id : string): Promise<any> {
+export async function orderstatus(id : any): Promise<any> {
   console.log(id)
   try {
     // Assume db.select().from() is an async operation and await its result.
-    const response = await db.select().from(order_packed_out).where(eq(order_packed_out.order_uuid, id)).execute();
-    console.log("hit")
+    const response = await db.select().from(shipment).where(eq(shipment.order_number, id)).execute();
+
     console.log(response)
 
     return response 
   } catch (error: unknown) {
     if (error instanceof Error) {
+      console.log(error)
       //logger.error(error.message);
     }
     throw error;

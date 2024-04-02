@@ -15,21 +15,24 @@ import { getOrders } from "@/database/dbOperations";
 
 export default function Dashboard() {
   console.log("dashboard loaded")
-  const[orders , setorders]=useState<OrderType[]>([])
+  //const[orders , setorders]=useState<OrderType[]>([])
   const [detailsClick, setDetailsClick] = useState(false);
   const [currentItem,setcurrentItem]= useState<OrderType>()
-  const orderss = useStore((state) => state.orders);
-  const fetchOrders = useStore((state) => state.fetchOrders);
+  const fetchOrdersFromDB = useStore((state) => state.fetchOrders);
+  const currentOrder = useStore((state) => state.setCurrentOrder)
+  const orders = useStore((state) => state.orders);
+  console.log(orders)
+
 
   useEffect(() => {
     const fetchOrders = async () => {
 
       try {
-        const response  = await getOrders()
-        console.log(response)
+        // const response  = await getOrders()
+        // console.log(response)
       
-
-        setorders(response);
+        fetchOrdersFromDB()
+        // setorders(response);
       } catch (error) {
         console.log('Error fetching orders:', error);
       }
@@ -38,7 +41,7 @@ export default function Dashboard() {
      fetchOrders();
   }, []);
   function handleDetailshow(item:OrderType){
-        setcurrentItem(item)
+        currentOrder(item)
         setDetailsClick(true)
   }
  
@@ -71,7 +74,7 @@ export default function Dashboard() {
               </Toggle>
             </div>
           </div>
-      {detailsClick && <OrderDetailsPage item ={currentItem as any}/>}
+      {/* {detailsClick && <OrderDetailsPage item ={currentItem }/>} */}
       {!detailsClick && (
         <div className="bg-white dark:bg-gray-900">
         <div className="flex flex-col">
@@ -87,6 +90,7 @@ export default function Dashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
+                <TableHead>S.No</TableHead>
                   <TableHead>Order Summary Number</TableHead>
                   <TableHead>Account</TableHead>
                   <TableHead>Status</TableHead>
@@ -96,15 +100,18 @@ export default function Dashboard() {
               </TableHeader>
               <TableBody>
               {
-                orders.map((item : OrderType)=>(
+                
+                orders.map((item : OrderType ,i =1)=>(
 
                 <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={item.id}>
+                  <TableCell className="font-medium">{i}</TableCell>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell>
                   <TableCell>{"item.order_date"}</TableCell>
-                  <TableCell>$217.34</TableCell>
+                  <TableCell>{item.total_price}</TableCell>
                 </TableRow>
+                
                 ))
               }
               </TableBody>

@@ -1,29 +1,32 @@
 import { create } from "zustand";
-//import { OrderType } from "./utils/types";
+import { getOrders } from "./database/dbOperations";
+import { OrderType } from "./database/schema";
 
 
 
 type store = {
-  orders: any[]
+  orders: OrderType[];
   fetchOrders: () => void;
+  setCurrentOrder: (order : OrderType) => void;
+  currentOrder: OrderType;
 
 };
 
-const URL = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/ordersDetails`
-  : "http://localhost:3000/api/ordersDetails";
-
 export const useStore = create<store>((set : any) => ({
   orders: [],
+  currentOrder :[],
   fetchOrders: async () => {
     try {
       console.log("first")
-      const response = await fetch(`${URL}`);
-      const orders = await response.json();
+      const orders = await getOrders()
+      console.log(orders)
+
       set({ orders });
     } catch (error) {
       console.error("Error fetching todos:", error);
     }
   },
+  setCurrentOrder : (order : OrderType) => set({ currentOrder: order }),
+
 
 }));

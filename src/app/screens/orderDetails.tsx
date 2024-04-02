@@ -4,31 +4,30 @@ import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import { OrderData } from "@/utils/types"
 import { getLineItems, getaddresses, orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
 import { AddressType, LineItemType, OrderType } from "@/database/schema"
+import { useStore } from "@/store"
 
 interface OrderDetailsPageProps {
-  item: OrderType;
+  item2: OrderType;
 }
 
-export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
-  console.log(item)
+export default  function OrderDetailsPage({ item2 }: OrderDetailsPageProps) {
+
+  const item = useStore((state) => state.currentOrder);
   
   const [status ,setstatus] = useState<any>("")
   const [address ,setaddress] = useState<any[]>([])
-  const [LineItems ,setLineItems] = useState< any[]>([])
+
   useEffect(()=>{
     const fetchstatus =async ()=>{
       console.log("hitt")
-      //const result  = await orderstatus(item.id as any)
+      const result  = await orderstatus(item.order_number as any)
       const addr = await getaddresses(item.shipping_address_id as number)
-      console.log(item.id)
-      const lineitems = await getLineItems(item.id as number)
       setaddress(addr)
-      //setstatus(result)
-      setLineItems(lineitems)
+      setstatus(result[1])
+
     }
     fetchstatus()
   },[])
@@ -37,8 +36,7 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
     return <div>No item data available.</div>;
   }
  
-   console.log(address)
-   console.log(LineItems)
+
   return (
     <div className="bg-white">
       <div className="flex flex-col lg:flex-row">
@@ -161,32 +159,31 @@ export default  function OrderDetailsPage({ item }: OrderDetailsPageProps) {
           </Card>
           <Card className="mb-4">
             <CardHeader>
-              <CardTitle>Summary</CardTitle>
+              <CardTitle>Tracking</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
+                    <TableHead>Tracking no</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Unit Price</TableHead>
+                    <TableHead>carrier</TableHead>
+                    <TableHead>Tracking Url</TableHead>
 
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {
-                    LineItems.map((LineItem : any) =>(
+                  
 
-                  <TableRow key={LineItem.id}>
-                    <TableCell>{LineItem?.product_name}</TableCell>
-                    <TableCell>{item?.fulfillment_status}</TableCell>
-                    <TableCell>{LineItem?.quantity}</TableCell>
-                    <TableCell>${LineItem?.price}</TableCell>
+                  <TableRow >
+                  <TableCell>{status?.tracking_number!}</TableCell>
+                    <TableCell>{status?.status ? status?.status : "pending"}</TableCell>
+                    <TableCell>{status?.shipping_carrier}</TableCell>
+                    {/* <TableCell>{LineItem?.quantity}</TableCell>
+                    <TableCell>${LineItem?.price}</TableCell> */}
 
                   </TableRow>
-                    ))
-                  }
+                
                   
                 </TableBody>
               </Table>
