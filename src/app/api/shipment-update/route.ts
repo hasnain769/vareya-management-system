@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
             tracking_number : tracking_number,
             shipping_carrier : shipping_carrier,
             shipping_method : shipping_method,
-            status :"Shipment at customs"
+            status :"shipment pre alerted"
             
 
         }

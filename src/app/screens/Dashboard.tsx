@@ -5,84 +5,52 @@ import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import OrderDetailsPage from "./orderDetails";
 import { useEffect, useState } from "react";
 import { useStore } from "@/store";
-import { OrderData } from "@/utils/types";
 import { OrderType } from "@/database/schema";
-import { getOrders } from "@/database/dbOperations";
-//import { OrderType } from "@/utils/types";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Dashboard() {
+  const router  = useRouter()
   console.log("dashboard loaded")
-  //const[orders , setorders]=useState<OrderType[]>([])
-  const [detailsClick, setDetailsClick] = useState(false);
-  const [currentItem,setcurrentItem]= useState<OrderType>()
-  const fetchOrdersFromDB = useStore((state) => state.fetchOrders);
-  const currentOrder = useStore((state) => state.setCurrentOrder)
+  const fetchOrdersFromStore = useStore((state) => state.fetchOrders);
+  const currentOrderDetailsSet = useStore((state) => state.setCurrentOrder)
   const orders = useStore((state) => state.orders);
-  console.log(orders)
+
 
 
   useEffect(() => {
     const fetchOrders = async () => {
 
-      try {
-        // const response  = await getOrders()
-        // console.log(response)
-      
-        fetchOrdersFromDB()
-        // setorders(response);
-      } catch (error) {
-        console.log('Error fetching orders:', error);
-      }
+        fetchOrdersFromStore()
+
     };
 
      fetchOrders();
   }, []);
   function handleDetailshow(item:OrderType){
-        currentOrder(item)
-        setDetailsClick(true)
+        currentOrderDetailsSet(item)
+        router.push("/order")
+        return
+
   }
  
   return (
 
     <>
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-            <div className="flex space-x-4">
-              <MenuIcon className="text-gray-600 dark:text-gray-300" />
-              <h1 className="text-xl font-semibold">Order Management</h1>
-              <Select>
-                <SelectTrigger id="order-summaries">
-                  <SelectValue>Order Summaries</SelectValue>
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="recently-viewed">Recently Viewed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex space-x-2">
-              <SettingsIcon className="text-gray-600 dark:text-gray-300" />
-              {/* <HelpCircleIcon className="text-gray-600 dark:text-gray-300" /> */}
-              <SignalIcon className="text-gray-600 dark:text-gray-300" />
-              <Avatar>
-                <AvatarImage alt="User avatar" src="/placeholder.svg?height=32&width=32" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <Toggle aria-label="Toggle night mode">
-                <MoonIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-              </Toggle>
-            </div>
-          </div>
-      {/* {detailsClick && <OrderDetailsPage item ={currentItem }/>} */}
-      {!detailsClick && (
+      
+
+    
         <div className="bg-white dark:bg-gray-900">
         <div className="flex flex-col">
           
           <div className="flex items-center justify-between px-6 py-2">
             <div className="flex space-x-2">
               <ListIcon className="text-gray-600 dark:text-gray-300" />
-              <span className="text-sm font-medium">49 items - Updated a few seconds ago</span>
+              <span className="text-sm font-medium">{orders.length} items- Updated a few seconds ago</span>
             </div>
             <Input className="w-1/4" placeholder="Search..." type="search" />
           </div>
@@ -101,15 +69,16 @@ export default function Dashboard() {
               <TableBody>
               {
                 
-                orders.map((item : OrderType ,i =1)=>(
+                orders.map((item : OrderType ,i)=>(
+                  <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={item.id}>
 
-                <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={item.id}>
-                  <TableCell className="font-medium">{i}</TableCell>
+                  <TableCell className="font-medium">{i+1}</TableCell>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell>
                   <TableCell>{"item.order_date"}</TableCell>
                   <TableCell>{item.total_price}</TableCell>
+
                 </TableRow>
                 
                 ))
@@ -131,7 +100,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      )}
+     
     </>
   );
 }
@@ -206,92 +175,6 @@ function LogInIcon(props : any) {
   )
 }
 
-
-function MenuIcon(props : any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  )
-}
-
-
-function MoonIcon(props : any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  )
-}
-
-
-function SettingsIcon(props : any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  )
-}
-
-
-function SignalIcon(props : any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 20h.01" />
-      <path d="M7 20v-4" />
-      <path d="M12 20v-8" />
-      <path d="M17 20V8" />
-      <path d="M22 4v16" />
-    </svg>
-  )
-}
 
 
 function StickyNoteIcon(props : any) {

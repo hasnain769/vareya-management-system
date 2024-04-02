@@ -1,3 +1,4 @@
+"use client"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
@@ -13,20 +14,21 @@ interface OrderDetailsPageProps {
   item2: OrderType;
 }
 
-export default  function OrderDetailsPage({ item2 }: OrderDetailsPageProps) {
+export default  function OrderDetailsPage() {
 
   const item = useStore((state) => state.currentOrder);
   
-  const [status ,setstatus] = useState<any>("")
+  const [status ,setstatus] = useState<any []>([])
   const [address ,setaddress] = useState<any[]>([])
 
   useEffect(()=>{
     const fetchstatus =async ()=>{
-      console.log("hitt")
+
       const result  = await orderstatus(item.order_number as any)
       const addr = await getaddresses(item.shipping_address_id as number)
+      const temp = result.reverse()
       setaddress(addr)
-      setstatus(result[1])
+      setstatus(result[0])
 
     }
     fetchstatus()
@@ -145,7 +147,8 @@ export default  function OrderDetailsPage({ item2 }: OrderDetailsPageProps) {
                     <div>{address[0]?.address1}</div>
                     <div>{address[0]?.address2}</div>
                     <div>{address[0]?.state}</div>
-                    <div>{address[0]?.country}{address[0]?.zip}</div>
+                    <div>{address[0]?.country}</div>
+                    <div>{address[0]?.zip}</div>
                   </div>
                   <div className="font-bold mt-4">Sales Channel</div>
                   <div className="mt-1">nto</div>
