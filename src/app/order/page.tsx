@@ -18,7 +18,7 @@ export default  function OrderDetailsPage() {
 
   const item = useStore((state) => state.currentOrder);
   
-  const [status ,setstatus] = useState<ShipmentType []>([])
+  const [status ,setstatus] = useState<ShipmentType[]>([])
   const [address ,setaddress] = useState<AddressType[]>([])
 
   useEffect(()=>{
@@ -28,7 +28,7 @@ export default  function OrderDetailsPage() {
       const addr = await getaddresses(item.shipping_address_id as number)
       const temp = result.reverse()
       setaddress(addr)
-      setstatus(result[0])
+      setstatus(temp)
 
     }
     fetchstatus()
@@ -127,7 +127,7 @@ export default  function OrderDetailsPage() {
         <div className="w-full lg:w-3/4 p-4">
           <Card className="mb-4">
             <CardHeader>
-              <CardTitle>Order Summary - {item.id}</CardTitle>
+              <CardTitle>Order Summary - {item.order_number}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -179,12 +179,9 @@ export default  function OrderDetailsPage() {
                   
 
                   <TableRow >
-                  <TableCell>{status?.tracking_number}</TableCell>
-                    <TableCell>{status.status ? status?.status : "pending"}</TableCell>
-                    <TableCell>{status?.shipping_carrier}</TableCell>
-                    {/* <TableCell>{LineItem?.quantity}</TableCell>
-                    <TableCell>${LineItem?.price}</TableCell> */}
-
+                  <TableCell>{status[0]?.tracking_number || " N/A"}</TableCell>
+                    <TableCell>{ status[0]?.status || "pending"}</TableCell>
+                    <TableCell>{status[0]?.shipping_carrier|| "N/A"}</TableCell>
                   </TableRow>
                 
                   
