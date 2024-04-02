@@ -7,7 +7,7 @@ import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { getLineItems, getaddresses, orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
-import { AddressType, LineItemType, OrderType } from "@/database/schema"
+import { AddressType, LineItemType, OrderType, ShipmentType } from "@/database/schema"
 import { useStore } from "@/store"
 
 interface OrderDetailsPageProps {
@@ -18,8 +18,8 @@ export default  function OrderDetailsPage() {
 
   const item = useStore((state) => state.currentOrder);
   
-  const [status ,setstatus] = useState<any []>([])
-  const [address ,setaddress] = useState<any[]>([])
+  const [status ,setstatus] = useState<ShipmentType []>([])
+  const [address ,setaddress] = useState<AddressType[]>([])
 
   useEffect(()=>{
     const fetchstatus =async ()=>{
@@ -179,8 +179,8 @@ export default  function OrderDetailsPage() {
                   
 
                   <TableRow >
-                  <TableCell>{status?.tracking_number!}</TableCell>
-                    <TableCell>{status?.status ? status?.status : "pending"}</TableCell>
+                  <TableCell>{status?.tracking_number}</TableCell>
+                    <TableCell>{status.status ? status?.status : "pending"}</TableCell>
                     <TableCell>{status?.shipping_carrier}</TableCell>
                     {/* <TableCell>{LineItem?.quantity}</TableCell>
                     <TableCell>${LineItem?.price}</TableCell> */}
