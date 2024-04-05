@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
         }
         try {
-          // await insertShipment(data)
+           await insertShipment(data)
         }catch (error) {
             console.log(error)
         }
