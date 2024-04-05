@@ -17,7 +17,7 @@ export default  function OrderDetailsPage() {
   const [item ,setItem] = useState <OrderType> ()
   const [address, setAddress] = useState <AddressType[]>([])
   const[status , setstatus] = useState<ShipmentType []> ([])
-  const [lineItems, setlineItem] = useState <[]>([])
+  const [lineItems, setlineItem] = useState < any | null>(null)
   const searchParams = useSearchParams()
  
   const id = searchParams.get('id')
@@ -68,7 +68,17 @@ export default  function OrderDetailsPage() {
   },[])
   
   if (!item) {
-    return <div>No item data available.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+
+<div className='flex space-x-2 justify-center items-center bg-white h-screen dark:invert'>
+ 	<span className='sr-only'>Loading...</span>
+  	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+	<div className='h-8 w-8 bg-black rounded-full animate-bounce'></div>
+</div>
+</div>
+    )
   }
  
 
@@ -194,40 +204,47 @@ export default  function OrderDetailsPage() {
             </CardContent>
           </Card>
           <Card className="mb-4">
-            <CardHeader>
-              <CardTitle>Items</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Product Name</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>#</TableHead>
-                    
+  <CardHeader>
+    <CardTitle>Items</CardTitle>
+  </CardHeader>
 
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  
-                {
-                  lineItems.map((item : LineItemType ,i)=>(
+  <CardContent>
+    {!lineItems  ? (
 
-                  <TableRow key={i}>
-                  <TableCell>{i}</TableCell>
-                  <TableCell>{item.product_name || " N/A"}</TableCell>
-                    <TableCell>{ item.quantity || "pending"}</TableCell>
-                    <TableCell>{item.price|| "N/A"}</TableCell>
-                  </TableRow>
-                  ))
-                }
-                
-                  
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+      
+    <div className="flex space-x-2 justify-center items-center bg-white  dark:invert">
+    <span className='sr-only'>Loading...</span>
+
+  	<div className='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+	<div className='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+	<div className='h-3 w-3 bg-black rounded-full animate-bounce'></div>
+  </div>
+
+      
+  
+    ) : (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Product Name</TableHead>
+            <TableHead>Quantity</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>#</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {lineItems.map((item : any , i : number) => (
+            <TableRow key={i+1}>
+              <TableCell>{item.product_name}</TableCell>
+              <TableCell>{item.quantity }</TableCell>
+              <TableCell>{item.price }</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )}
+  </CardContent>
+</Card>
           <Card className="mb-4">
             <CardHeader>
               <CardTitle>Tracking</CardTitle>
