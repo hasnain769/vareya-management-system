@@ -76,7 +76,7 @@ export default function Dashboard() {
               {
                 
                 orders.map((item : OrderType ,i)=>(
-                  <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={item.id}>
+                  <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={i}>
 
                   <TableCell className="font-medium">{i+1}</TableCell>
                   <TableCell className="font-medium">{item.order_number}</TableCell>

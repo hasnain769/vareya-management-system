@@ -49,7 +49,7 @@ export default  function OrderDetailsPage() {
         setstatus(statusData)
         try {
 
-          const response = await fetch(`http://localhost:3000/api/single-order-details?id=${Oid}`)
+          const response = await fetch(`https://vareya-management-system.vercel.app/api/single-order-details?id=${Oid}`)
           const lineItemsData =await response.json()
           console.log(lineItemsData)
           setlineItem(lineItemsData)
@@ -63,7 +63,7 @@ export default  function OrderDetailsPage() {
    
    
     fetchDetails()
-    //details()
+
 
   },[])
   
@@ -204,6 +204,7 @@ export default  function OrderDetailsPage() {
                     <TableHead>Product Name</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>Price</TableHead>
+                    <TableHead>#</TableHead>
                     
 
                   </TableRow>
@@ -211,9 +212,10 @@ export default  function OrderDetailsPage() {
                 <TableBody>
                   
                 {
-                  lineItems.map((item : LineItemType)=>(
+                  lineItems.map((item : LineItemType ,i)=>(
 
-                  <TableRow >
+                  <TableRow key={i}>
+                  <TableCell>{i}</TableCell>
                   <TableCell>{item.product_name || " N/A"}</TableCell>
                     <TableCell>{ item.quantity || "pending"}</TableCell>
                     <TableCell>{item.price|| "N/A"}</TableCell>
