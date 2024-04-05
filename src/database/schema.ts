@@ -40,7 +40,7 @@ export const address = pgTable('address', {
 
 export const lineItem = pgTable('line_item', {
     id: serial("id").primaryKey(),
-    order_id: integer('order_id').references(() => order.id, { onDelete: 'cascade' }),
+    order_number: varchar('order_number').references(() => order.order_number, { onDelete: 'cascade' }),
     product_name: varchar('product_name'),
     quantity: integer('quantity'),
     price: decimal('price')
@@ -66,6 +66,7 @@ export const holds = pgTable('holds', {
 
 export const order = pgTable('order', {
     id: serial("id").primaryKey(),
+    order_id : varchar("order_id"),
     legacy_id: integer('legacy_id'),
     shop_name: varchar('shop_name'),
     account_id: varchar('account_id'),

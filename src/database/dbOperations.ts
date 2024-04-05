@@ -45,6 +45,9 @@ export async function orderstatus(id : any): Promise<any> {
   }
  }
 
+export async function insertLineItem(data : LineItemType){
+  await db.insert(lineItem).values(data);
+}
 
 export async function insertOrderAllocate(data: orderAllocatedType): Promise<void> {
   console.log(data)
@@ -179,6 +182,8 @@ export async function insertTote(data: any): Promise<void> {
                 console.log(holdsId)
 
                 const orderData: OrderType = {
+                    order_id :ord?.id,
+                    legacy_id :ord?.legacy_id,
                     shop_name: ord?.shop_name,
                     account_id: ord?.account_id || '',
                     profile: ord?.profile || '',
@@ -198,38 +203,9 @@ export async function insertTote(data: any): Promise<void> {
                 const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
                 console.log(orderId)
 
-                // await Promise.all(ord.line_items!.edges.map(async (Item: any) => {
-                //   console.log(orderId[0].id)
-                //     const lineItemData: LineItemType = {
-                //         order_id: orderId[0].id as number,
-                //         product_name: Item.node.product_name,
-                //         quantity: Item.node.quantity,
-                //         price: parseFloat(Item.node.price) as any
-                //     };
-                //     console.log(lineItemData)
-                //     await db.insert(lineItem).values(lineItemData).execute()
-                // }));
-                console.log("hit")
-                // if (ord.shipping_label) {
-                //     const shippingLabelData: ShippingLabelType = {
-                //         tracking_number: ord.shipping_label.tracking_number,
-                //         tracking_url: ord.shipping_label.tracking_url,
-                //         shipping_method: ord.shipping_label.shipping_method,
-                //         shipping_name: ord.shipping_label.shipping_name,
-                //         status: ord.shipping_label.status,
-                //         shipment_id: orderId[0].id
-                //     };
-                //     await db.insert(shippingLabel).values(shippingLabelData).execute();
-                // }
 
-                // if (ord.shipment) {
-                //     const shipmentData: ShipmentType = {
-                //         total_packages: ord.shipment.total_packages,
-                //         order_id: orderId[0].id
-                //     };
-                //     console.log(shipmentData);
-                //     await db.insert(shipment).values(shipmentData).execute();
-                // }
+                console.log("hit")
+
                 
                 console.log(`Order with order number ${ord.order_number} inserted successfully.`);
             // } catch (error: unknown) {
@@ -250,21 +226,35 @@ export async function getOrders() {
   
   return data
 }
+export async function getSingleOrder(id : any) {
+  console.log(id)
+  const data = await db.select().from(order).where(eq(order.id,id))
+  console.log(data)
+  return data
 
-export async function getaddresses(id: number) {
-  console.log("hir")
+}
+
+export async function getaddresses(id: any) {
+  console.log(id)
   const data = await db.select().from(address).where(eq(address.id , id)).execute()
   console.log(data)
   return data
 }
 
-export async function getLineItems(orderId: number) {
-  console.log(orderId);
+export async function getLineItems(orderNumber: any ,id : any ,itt : number) {
+  console.log(id);
+  
   try {
     const data = await db
       .select()
       .from(lineItem)
-      .where(eq(lineItem.order_id, 12))
+      .where(eq(lineItem.order_number, orderNumber))
+    if(data.length < 1){
+   
+        const response = await fetch(`http://localhost:3000/api/single-order-details?id=${id}`)
+        
+        
+    }  
    
     console.log(data);
     return data;

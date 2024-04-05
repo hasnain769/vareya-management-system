@@ -5,33 +5,66 @@ import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import { getLineItems, getaddresses, orderstatus } from "@/database/dbOperations"
+import {  getLineItems, getSingleOrder, getaddresses, orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
 import { AddressType, LineItemType, OrderType, ShipmentType } from "@/database/schema"
-import { useStore } from "@/store"
+// import { useStore } from "@/store"
+import { useSearchParams , useRouter} from "next/navigation"
+//import { useRouter } from 'next/router';
 
-interface OrderDetailsPageProps {
-  item2: OrderType;
-}
 
 export default  function OrderDetailsPage() {
+  const [item ,setItem] = useState <OrderType> ()
+  const [address, setAddress] = useState <AddressType[]>([])
+  const[status , setstatus] = useState<ShipmentType []> ([])
+  const [lineItems, setlineItem] = useState <[]>([])
+  const searchParams = useSearchParams()
+ 
+  const id = searchParams.get('id')
+  console.log(id)
+ 
 
-  const item = useStore((state) => state.currentOrder);
-  
-  const [status ,setstatus] = useState<ShipmentType[]>([])
-  const [address ,setaddress] = useState<AddressType[]>([])
+
 
   useEffect(()=>{
-    const fetchstatus =async ()=>{
+    const fetchDetails =async ()=>{
+      console.log(id)
+      let addr : any =""
+      let orderNumber : any = ""
+      let Oid : any = ""
+      try{
 
-      const result  = await orderstatus(item.order_number as any)
-      const addr = await getaddresses(item.shipping_address_id as number)
-      const temp = result.reverse()
-      setaddress(addr)
-      setstatus(temp)
+        const result = await getSingleOrder(id)
+        addr = result[0]?.shipping_address_id 
+        orderNumber = result[0]?.order_number
+        Oid = result[0]?.order_id
+        console.log(Oid)
+        setItem(result[0])
+      }finally{
 
+        console.log(orderNumber)
+        const add = await getaddresses(addr)
+        const statusData = (await orderstatus(orderNumber)).reverse()
+        setAddress(add)
+        setstatus(statusData)
+        try {
+
+          const response = await fetch(`http://localhost:3000/api/single-order-details?id=${Oid}`)
+          const lineItemsData =await response.json()
+          console.log(lineItemsData)
+          setlineItem(lineItemsData)
+        } catch (error : unknown){
+          console.log(error)
+        }
+
+      } 
+      
     }
-    fetchstatus()
+   
+   
+    fetchDetails()
+    //details()
+
   },[])
   
   if (!item) {
@@ -158,6 +191,39 @@ export default  function OrderDetailsPage() {
                   <div className="mt-1">Net</div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle>Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product Name</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Price</TableHead>
+                    
+
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  
+                {
+                  lineItems.map((item : LineItemType)=>(
+
+                  <TableRow >
+                  <TableCell>{item.product_name || " N/A"}</TableCell>
+                    <TableCell>{ item.quantity || "pending"}</TableCell>
+                    <TableCell>{item.price|| "N/A"}</TableCell>
+                  </TableRow>
+                  ))
+                }
+                
+                  
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
           <Card className="mb-4">

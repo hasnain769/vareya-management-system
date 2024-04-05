@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { insertOrderAllocate, insertOrderPackedOut, insertShipment, insertTote } from "@/database/dbOperations";
-import { ShipmentType, orderAllocatedType, orderPackedOutType } from "@/database/schema";
+import { insertLineItem, insertOrderAllocate, insertOrderPackedOut, insertShipment, insertTote } from "@/database/dbOperations";
+import { LineItemType, ShipmentType, orderAllocatedType, orderPackedOutType } from "@/database/schema";
+import { CookingPot } from "lucide-react";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
     const { tracking_number, order_number, shipping_method ,shipping_carrier} = body.fulfillment;
-    console.log(order_number)
-    console.log(tracking_number)
-    console.log(shipping_carrier)
-    console.log(shipping_method)
+    const packages = body.packages
 
+
+    console.log(packages)
+    packages.forEach(async (packageItem: any) => {
+        packageItem.line_items.forEach(async (lineItem: any) => {
+            const data: LineItemType = {
+                order_number: order_number,
+                product_name: lineItem.product_name,
+                price: lineItem.price,
+                quantity: lineItem.quantity
+            };
+            console.log(data)
+            await insertLineItem(data);
+        });
+    });
 
     try {
         const data : ShipmentType ={
@@ -22,7 +34,7 @@ export async function POST(req: NextRequest) {
 
         }
         try {
-           await insertShipment(data)
+          // await insertShipment(data)
         }catch (error) {
             console.log(error)
         }

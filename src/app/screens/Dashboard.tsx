@@ -6,34 +6,40 @@ import { Input } from "@/components/ui/input";
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { useStore } from "@/store";
+// import { useStore } from "@/store";
 import { OrderType } from "@/database/schema";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getOrders } from "@/database/dbOperations";
 
 
 
 export default function Dashboard() {
   const router  = useRouter()
+  const [orders ,setorders] = useState<OrderType[]>([])
+
   console.log("dashboard loaded")
-  const fetchOrdersFromStore = useStore((state) => state.fetchOrders);
-  const currentOrderDetailsSet = useStore((state) => state.setCurrentOrder)
-  const orders = useStore((state) => state.orders);
+
 
 
 
   useEffect(() => {
+    // const fetchOrdersFromStore = useStore((state) => state.fetchOrders);
+    // const fetchedOrders = useStore((state) => state.orders);
+    
     const fetchOrders = async () => {
-
-        fetchOrdersFromStore()
+      
+      const result = (await getOrders()).reverse()
+      const data = result
+      setorders(data as any)
+      
 
     };
 
      fetchOrders();
   }, []);
   function handleDetailshow(item:OrderType){
-        currentOrderDetailsSet(item)
-        router.push("/order")
+        router.push(`/order?id=${item.id as number}`)
         return
 
   }
