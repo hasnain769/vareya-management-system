@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-b bg-slate-100">
+    <div className="flex items-center justify-between px-6 py-4 border-b bg-slate-900 text-white">
             <div className="flex space-x-4">
               <Image src={logo} alt="vareyaBV" width={60} height={50}></Image>
               <h1 className="text-xl font-semibold pt-4">Vareya OMS</h1>
@@ -23,12 +23,12 @@ export default function Header() {
               <SettingsIcon className="text-gray-600 dark:text-gray-300" />
               {/* <HelpCircleIcon className="text-gray-600 dark:text-gray-300" /> */}
               <SignalIcon className="text-gray-600 dark:text-gray-300" />
-              <Avatar>
+              {/* <Avatar>
                 <AvatarImage alt="User avatar" src="/placeholder.svg?height=32&width=32" />
                 <AvatarFallback>U</AvatarFallback>
-              </Avatar>
+              </Avatar> */}
               <Toggle aria-label="Toggle night mode">
-                <MoonIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <MoonIcon className="h-7 w-7 text-gray-600 dark:text-gray-300 pb-2" />
               </Toggle>
             </div>
           </div>

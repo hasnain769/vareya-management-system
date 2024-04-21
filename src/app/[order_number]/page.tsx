@@ -98,7 +98,7 @@ export default  function OrderDetailsPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Discount</span>
-                  <span>{item.total_discounts}</span>
+                  <span>${item.total_discounts}</span>
                 </div>
                 
                 <div className="flex justify-between">
@@ -123,7 +123,7 @@ export default  function OrderDetailsPage() {
                   <Button variant="outline">History</Button>
                 </div>
                 <div className="mt-4">
-                  <Button className="w-full mb-2">Add</Button>
+                  
                   <Select>
                     <SelectTrigger id="action">
                       <SelectValue placeholder="Cancel Item" />
@@ -190,12 +190,11 @@ export default  function OrderDetailsPage() {
                   <div className="mt-1">
                     <div>{address[0]?.address1}</div>
                     <div>{address[0]?.address2}</div>
-                    <div>{address[0]?.state}</div>
-                    <div>{address[0]?.country}</div>
-                    <div>{address[0]?.zip}</div>
+                    <div>{address[0]?.state} {address[0]?.country} {address[0]?.zip}</div>
+                    <div></div>
+                    <div></div>
                   </div>
-                  <div className="font-bold mt-4">Sales Channel</div>
-                  <div className="mt-1">nto</div>
+                 
                 </div>
                 <div>
                   <div className="font-bold">Tax Locale Type</div>
