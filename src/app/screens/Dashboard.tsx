@@ -58,7 +58,7 @@ export default function Dashboard() {
               <ListIcon className="text-gray-600 dark:text-gray-300" />
               <span className="text-sm font-medium">{orders.length} items- Updated a few seconds ago</span>
             </div>
-            <Input className="w-1/4" placeholder="Search..." type="search" />
+            
           </div>
           <div className="overflow-x-auto">
             <Table>

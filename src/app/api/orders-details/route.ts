@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
                       total_discounts
                       holds {
                         fraud_hold
-                        payment_hold
+                        payment_hold 
                         operator_hold
                         address_hold
                         shipping_method_hold

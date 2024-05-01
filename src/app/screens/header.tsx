@@ -3,13 +3,14 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import logo from "@/app/assets/vareyaLogo.png"
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
 
 export default function Header() {
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-b bg-slate-900 text-white">
+    <div className="flex items-center justify-between px-6 py-4 border-b bg-slate-100 text-black">
             <div className="flex space-x-4">
-              <Image src={logo} alt="vareyaBV" width={60} height={50}></Image>
-              <h1 className="text-xl font-semibold pt-4">Vareya OMS</h1>
+              <Image src={logo} alt="vareyaBV" width={50} height={40}></Image>
+              <h1 className="text-xl font-semibold pt-4"></h1>
               {/* <Select>
                 <SelectTrigger id="order-summaries">
                   <SelectValue>Order Summaries</SelectValue>
@@ -18,8 +19,21 @@ export default function Header() {
                   <SelectItem value="recently-viewed">Recently Viewed</SelectItem>
                 </SelectContent>
               </Select> */}
+            <div className="pt-7 text-slate-600 font-large" >
+              <nav className="flex space-x-6">
+                <ol className="  hover:bg-slate-200 focus:bg-slate-200 cursor-pointer" >Fulfillments</ol>
+                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Addresses</ol>
+                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Payments</ol>
+                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Accounts</ol>
+                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Support</ol>
+                
+              </nav>
             </div>
-            <div className="flex space-x-2">
+            </div>
+            <div className="flex space-x-2 pt-4">
+              <div>
+              <Input className="w-48 " placeholder="Search..." type="search" />
+              </div>
               <SettingsIcon className="text-gray-600 dark:text-gray-300" />
               {/* <HelpCircleIcon className="text-gray-600 dark:text-gray-300" /> */}
               <SignalIcon className="text-gray-600 dark:text-gray-300" />
@@ -27,9 +41,9 @@ export default function Header() {
                 <AvatarImage alt="User avatar" src="/placeholder.svg?height=32&width=32" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar> */}
-              <Toggle aria-label="Toggle night mode">
+              {/* <Toggle aria-label="Toggle night mode">
                 <MoonIcon className="h-7 w-7 text-gray-600 dark:text-gray-300 pb-2" />
-              </Toggle>
+              </Toggle> */}
             </div>
           </div>
   )
