@@ -11,7 +11,7 @@ import { AddressType, LineItemType, OrderType, ShipmentType } from "@/database/s
 // import { useStore } from "@/store"
 import { useSearchParams , useRouter} from "next/navigation"
 //import { useRouter } from 'next/router';
-
+import PathComponent from "../screens/pathComponent"
 
 export default  function OrderDetailsPage() {
   const [item ,setItem] = useState <OrderType> ()
@@ -118,32 +118,12 @@ export default  function OrderDetailsPage() {
             </CardHeader>
             <CardContent>
               <Tabs>
-                <div className="flex justify-between">
-                  <Button variant="outline">Actions</Button>
-                  <Button variant="outline">History</Button>
-                </div>
-                <div className="mt-4">
+                
+                <div className="mt-4 flex flex-col space-y-3">
+                <Button variant="outline">History</Button>
+                <Button variant="outline">Discount Item</Button>
+                <Button variant="outline">Cancel</Button>
                   
-                  <Select>
-                    <SelectTrigger id="action">
-                      <SelectValue placeholder="Cancel Item" />
-                    </SelectTrigger>
-                  </Select>
-                  <Select >
-                    <SelectTrigger id="action">
-                      <SelectValue placeholder="Discount Item" />
-                    </SelectTrigger>
-                  </Select>
-                  <Select >
-                    <SelectTrigger id="action">
-                      <SelectValue placeholder="RMA Return" />
-                    </SelectTrigger>
-                  </Select>
-                  <Select>
-                    <SelectTrigger id="action">
-                      <SelectValue placeholder="Return Item" />
-                    </SelectTrigger>
-                  </Select>
                 </div>
               </Tabs>
             </CardContent>
@@ -174,6 +154,10 @@ export default  function OrderDetailsPage() {
               <CardTitle>Order Summary - {item.order_number}</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="">
+
+              <PathComponent ></PathComponent>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <div className="font-bold">{item.shop_name}</div>

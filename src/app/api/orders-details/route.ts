@@ -1,6 +1,8 @@
 import { insertCompleteOrder } from '@/database/dbOperations';
 import { date } from 'drizzle-orm/mysql-core';
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/utils/logger';
+
 
 export async function GET(req: NextRequest) {
   console.log("order fetching start")
@@ -113,12 +115,13 @@ export async function GET(req: NextRequest) {
     // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
     console.log(ordersData)
-    // console.log(ordersData)
+    logger.info(ordersData)
     try {
-      await insertCompleteOrder(ordersData)
+      const result = await insertCompleteOrder(ordersData)
+      logger.info(result)
     }
     catch (error) {
-      console.log(error)
+      logger.info(error)
     }
     
     return NextResponse.json(ordersData);
