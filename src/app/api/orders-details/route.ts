@@ -132,7 +132,7 @@ export async function GET(req: NextRequest) {
     }
     catch (error) {
       return NextResponse.json(error);
-      logger.error(error)
+      //logger.error(error)
     }
     
     // return NextResponse.json(ordersData);
