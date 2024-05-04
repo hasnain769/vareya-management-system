@@ -155,7 +155,7 @@ export async function insertTote(data: any): Promise<void> {
                 const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
                 if(orderExist.length > 0){
                   console.log(`order with order number ${ord.order_number} exist in db`)
-                  return
+                  return "already exists"
                 }
                 const addressData: AddressType = {
                     address1: ord.shipping_address?.address1 || '',
