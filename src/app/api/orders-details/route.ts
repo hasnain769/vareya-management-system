@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/utils/logger';
 
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   console.log("order fetching start")
   try {
     // Define the refresh token
