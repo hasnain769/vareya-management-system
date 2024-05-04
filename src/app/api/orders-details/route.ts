@@ -129,6 +129,7 @@ export async function GET(req: NextRequest) {
       logger.info(result)
     }
     catch (error) {
+      return NextResponse.json(error);
       logger.info(error)
     }
     
