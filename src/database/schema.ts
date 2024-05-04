@@ -79,9 +79,9 @@ export const order = pgTable('order', {
     subtotal: decimal('subtotal'),
     total_price: decimal('total_price'),
     total_discounts: decimal('total_discounts'),
-    holds_id: integer('holds_id').references(() => holds.id, { onDelete: 'cascade' }),
-    shipping_address_id: integer('shipping_address_id').references(() => address.id, { onDelete: 'cascade' }),
-    billing_address_id: integer('billing_address_id').references(() => address.id, { onDelete: 'cascade' }),
+    holds_id: integer('holds_id').references(() => holds.id),
+    shipping_address_id: integer('shipping_address_id').references(() => address.id),
+    billing_address_id: integer('billing_address_id').references(() => address.id),
     //pick : varchar("pick").references(() => order_allocated.order_number),
 });
 

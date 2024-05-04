@@ -105,6 +105,7 @@ export async function GET(req: NextRequest) {
 
     // Make a POST request to the GraphQL API endpoint with the access token in the header
     const graphqlResponse = await fetch("https://public-api.shiphero.com/graphql", {
+      cache: 'no-store', 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,15 +124,15 @@ export async function GET(req: NextRequest) {
     // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
     
-    logger.info(ordersData)
+    logger.info(ordersData[0])
     try {
       const result = await insertCompleteOrder(ordersData)
-      return NextResponse.json(result);
       logger.info(result)
+      return NextResponse.json(result);
     }
     catch (error) {
       return NextResponse.json(error);
-      logger.info(error)
+      logger.error(error)
     }
     
     // return NextResponse.json(ordersData);
