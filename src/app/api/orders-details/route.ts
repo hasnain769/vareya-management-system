@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     const accessToken = refreshData.access_token;
 
     const currentTime = new Date();
-    const ordersFromDate = new Date(currentTime.getTime() - 15 * 60000); // Subtract 15 minutes from current time
+    const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
 
     console.log(ordersFromDate.toISOString())
@@ -80,6 +80,14 @@ export async function GET(req: NextRequest) {
                           zip
                           country
                       }
+                      authorizations {
+                        transaction_id
+                        date
+                        card_type
+                        postauthed_amount
+                        authorized_amount
+                        refunded_amount
+                      }
                   billing_address{
                     address1
                     address2
@@ -114,7 +122,7 @@ export async function GET(req: NextRequest) {
     const graphqlData = await graphqlResponse.json();
     // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
-    console.log(ordersData)
+    
     logger.info(ordersData)
     try {
       const result = await insertCompleteOrder(ordersData)

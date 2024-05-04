@@ -1,5 +1,6 @@
 import { db } from '@/database';
 import { eq } from 'drizzle-orm';
+import { logger } from '@/utils/logger';
 import {
     orderPackedOutType,
     order_allocated,
@@ -143,10 +144,11 @@ export async function insertTote(data: any): Promise<void> {
     ))
 }
   export async function insertCompleteOrder(ordersData: any): Promise<void> {
-     console.log(ordersData);``
+    //  console.log(ordersData);``
     // try {
          await Promise.all(ordersData.map(async (ord: any) => {
-          //const ord =ordersData[0]
+
+        // const ord =ordersData[0]
             console.log(ord)
             // try {
                 // console.log("hit"),
@@ -166,20 +168,19 @@ export async function insertTote(data: any): Promise<void> {
 
                 const addressId = await db.insert(address).values(addressData).returning({id :address.id})
                 console.log(addressId)
-                console.log(addressId)
 
-                const holdsData: HoldsType = {
-                    fraud_hold: ord.holds?.fraud_hold || false,
-                    payment_hold: ord.holds?.payment_hold || false,
-                    operator_hold: ord.holds?.operator_hold || false,
-                    address_hold: ord.holds?.address_hold || false,
-                    shipping_method_hold: ord.holds?.shipping_method_hold || false,
-                    client_hold: ord.holds?.client_hold || false
-                };
+                // const holdsData: HoldsType = {
+                //     fraud_hold: ord.holds?.fraud_hold || false,
+                //     payment_hold: ord.holds?.payment_hold || false,
+                //     operator_hold: ord.holds?.operator_hold || false,
+                //     address_hold: ord.holds?.address_hold || false,
+                //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
+                //     client_hold: ord.holds?.client_hold || false
+                // };
 
-                const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
-                console.log(holdsData)
-                console.log(holdsId)
+                // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+                // console.log(holdsData)
+                // console.log(holdsId)
 
                 const orderData: OrderType = {
                     order_id :ord?.id,
@@ -195,7 +196,7 @@ export async function insertTote(data: any): Promise<void> {
                     subtotal: parseFloat(ord.subtotal!) as any,
                     total_price: parseFloat(ord.total_price!) as any, 
                     total_discounts: parseFloat(ord.total_discounts!) as any,
-                    holds_id: holdsId[0].id ,
+                  //  holds_id: holdsId[0].id ,
                     shipping_address_id: addressId[0].id
                 };
                 console.log(orderData)
@@ -204,7 +205,7 @@ export async function insertTote(data: any): Promise<void> {
                 console.log(orderId)
 
 
-                console.log("hit")
+
 
                 
                 console.log(`Order with order number ${ord.order_number} inserted successfully.`);
