@@ -143,7 +143,7 @@ export async function insertTote(data: any): Promise<void> {
     }
     ))
 }
-  export async function insertCompleteOrder(ordersData: any): Promise<void> {
+  export async function insertCompleteOrder(ordersData: any) {
     //  console.log(ordersData);``
     // try {
        //  await Promise.all(ordersData.map(async (ord: any) => {
@@ -217,7 +217,7 @@ export async function insertTote(data: any): Promise<void> {
     //     console.error('Error inserting complete order data:', error);
     //     throw error;
     // }
-    return
+    return `inserted order with orderid ${orderId}`
 
 }
 
