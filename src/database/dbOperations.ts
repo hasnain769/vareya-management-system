@@ -167,7 +167,7 @@ export async function insertTote(data: any): Promise<void> {
                 };
 
                 const addressId = await db.insert(address).values(addressData).returning({id :address.id})
-                console.log(addressId)
+                logger.info(addressId)
 
                 // const holdsData: HoldsType = {
                 //     fraud_hold: ord.holds?.fraud_hold || false,
@@ -202,7 +202,7 @@ export async function insertTote(data: any): Promise<void> {
                 console.log(orderData)
 
                 const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
-                console.log(orderId)
+                logger.info(`order inserted with orderId: ${orderId}`)
 
 
 
