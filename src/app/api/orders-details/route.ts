@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     const accessToken = refreshData.access_token;
 
     const currentTime = new Date();
-    const ordersFromDate = new Date(currentTime.getTime() - 5 * 60000); // Subtract 15 minutes from current time
+    const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
 
     console.log(ordersFromDate.toISOString())

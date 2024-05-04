@@ -146,7 +146,7 @@ export async function insertTote(data: any): Promise<void> {
   export async function insertCompleteOrder(ordersData: any) {
     //  console.log(ordersData);``
     // try {
-         await Promise.all(ordersData.map(async (ord: any) => {
+        const ordersResponse = await Promise.all(ordersData.map(async (ord: any) => {
 
         // const ord =ordersData[0]
             logger.info(ord)
@@ -157,7 +157,7 @@ export async function insertTote(data: any): Promise<void> {
                 if(orderExist.length > 0){
                   console.log("orderExist")
                  logger.info(`order with order number ${ord.order_number} exist in db`)
-                  //return "already exists"
+                return `order ${ord.order_number} already exists`
                 }
                 else {
 
@@ -220,10 +220,12 @@ export async function insertTote(data: any): Promise<void> {
                     //     console.error('Error inserting complete order data:', error);
                     //     throw error;
                     // }
-                    // return `inserted order with orderid ${orderInsertionResponse[0].id}`
+                     return `inserted order ${ord.order_number}  with orderid ${orderInsertionResponse[0].id}`
                   }
                 }));
 
+                logger.info("all orders Response" ,ordersResponse)
+                return ordersResponse
 }
 
 // export async function insertCompleteOrder(ordersData: any): Promise<void> {
