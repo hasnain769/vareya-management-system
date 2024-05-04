@@ -288,7 +288,7 @@ export async function insertTote(data: any): Promise<void> {
 
 //   return;
 // }
-export async function insertCompleteOrder(ordersData: any): Promise<void> {
+export async function insertCompleteOrder(ordersData: any) {
   // Consider adding basic input validation to prevent unexpected errors
   if (!Array.isArray(ordersData)) {
     throw new Error('Invalid ordersData. Must be an array.');
@@ -296,75 +296,87 @@ export async function insertCompleteOrder(ordersData: any): Promise<void> {
 
   
   try {
+    let i =0
 
     for (const ord of ordersData) {
-      // Check for existing order before insertion (optional for idempotence)
-      const existingOrder = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
+      i++
+      try {
 
-      if (existingOrder.length > 0) {
-        console.log(`Order with order number ${ord.order_number} already exists in db`);
-        continue; // Skip insertion if order already exists (optional)
+
+        const existingOrder = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
+  
+        if (existingOrder.length > 0) {
+          console.log(`Order with order number ${ord.order_number} already exists in db`);
+          continue; // Skip insertion if order already exists (optional)
+        }
+  
+  
+  
+        const addressData: AddressType = {
+          address1: ord.shipping_address?.address1 || '',
+          address2: ord.shipping_address?.address2 || null,
+          city: ord.shipping_address?.city || '',
+          state: ord.shipping_address?.state || '',
+          zip: ord.shipping_address?.zip || '',
+          country: ord.shipping_address?.country || ''
+      };
+  
+      const addressId = await db.insert(address).values(addressData).returning({id :address.id})
+      console.log(addressId)
+  
+      // const holdsData: HoldsType = {
+      //     fraud_hold: ord.holds?.fraud_hold || false,
+      //     payment_hold: ord.holds?.payment_hold || false,
+      //     operator_hold: ord.holds?.operator_hold || false,
+      //     address_hold: ord.holds?.address_hold || false,
+      //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
+      //     client_hold: ord.holds?.client_hold || false
+      // };
+  
+      // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+      // console.log(holdsData)
+      // console.log(holdsId)
+  
+      const orderData: OrderType = {
+          order_id :ord?.id,
+          legacy_id :ord?.legacy_id,
+          shop_name: ord?.shop_name,
+          account_id: ord?.account_id || '',
+          profile: ord?.profile || '',
+          email: ord?.email || '',
+          order_number: ord?.order_number || '',
+          fulfillment_status: ord.fulfillment_status || '',
+          order_date: new Date(ord.order_date!),
+          total_tax: parseFloat(ord.total_tax!) as any ,
+          subtotal: parseFloat(ord.subtotal!) as any,
+          total_price: parseFloat(ord.total_price!) as any, 
+          total_discounts: parseFloat(ord.total_discounts!) as any,
+        //  holds_id: holdsId[0].id ,
+          shipping_address_id: addressId[0].id
+      };
+      console.log(orderData)
+  
+      const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
+      console.log(orderId)
+
+      }catch(error){
+        console.log(error)
+
+          console.log (`an error accoured after inserting oreder no ${i}` )
       }
-
-
-
-      const addressData: AddressType = {
-        address1: ord.shipping_address?.address1 || '',
-        address2: ord.shipping_address?.address2 || null,
-        city: ord.shipping_address?.city || '',
-        state: ord.shipping_address?.state || '',
-        zip: ord.shipping_address?.zip || '',
-        country: ord.shipping_address?.country || ''
-    };
-
-    const addressId = await db.insert(address).values(addressData).returning({id :address.id})
-    console.log(addressId)
-
-    // const holdsData: HoldsType = {
-    //     fraud_hold: ord.holds?.fraud_hold || false,
-    //     payment_hold: ord.holds?.payment_hold || false,
-    //     operator_hold: ord.holds?.operator_hold || false,
-    //     address_hold: ord.holds?.address_hold || false,
-    //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
-    //     client_hold: ord.holds?.client_hold || false
-    // };
-
-    // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
-    // console.log(holdsData)
-    // console.log(holdsId)
-
-    const orderData: OrderType = {
-        order_id :ord?.id,
-        legacy_id :ord?.legacy_id,
-        shop_name: ord?.shop_name,
-        account_id: ord?.account_id || '',
-        profile: ord?.profile || '',
-        email: ord?.email || '',
-        order_number: ord?.order_number || '',
-        fulfillment_status: ord.fulfillment_status || '',
-        order_date: new Date(ord.order_date!),
-        total_tax: parseFloat(ord.total_tax!) as any ,
-        subtotal: parseFloat(ord.subtotal!) as any,
-        total_price: parseFloat(ord.total_price!) as any, 
-        total_discounts: parseFloat(ord.total_discounts!) as any,
-      //  holds_id: holdsId[0].id ,
-        shipping_address_id: addressId[0].id
-    };
-    console.log(orderData)
-
-    const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
-    console.log(orderId)
+      console.log(i)
+      
     }
 
 
 
 
   } catch (error) {
-    console.error('Error inserting complete order data:', error);
+    console.log('Error inserting complete order data:', error);
     throw error; // Re-throw for handling at a higher level
   }
 
-  return;
+  return "success";
 }
 
 export async function getOrders() {

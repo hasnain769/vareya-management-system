@@ -126,11 +126,11 @@ export async function GET(req: NextRequest) {
     logger.info(ordersData)
     try {
       const result = await insertCompleteOrder(ordersData)
-      return NextResponse.json("result", );
+      return NextResponse.json(result);
       logger.info(result)
     }
     catch (error) {
-      return NextResponse.json("error");
+      return NextResponse.json(error);
       logger.info(error)
     }
     
