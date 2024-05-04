@@ -143,83 +143,83 @@ export async function insertTote(data: any): Promise<void> {
     }
     ))
 }
-//   export async function insertCompleteOrder(ordersData: any): Promise<void> {
-//     //  console.log(ordersData);``
-//     // try {
-//          await Promise.all(ordersData.map(async (ord: any) => {
+  export async function insertCompleteOrder(ordersData: any): Promise<void> {
+    //  console.log(ordersData);``
+    // try {
+       //  await Promise.all(ordersData.map(async (ord: any) => {
 
-        // // const ord =ordersData[0]
-        //     console.log(ord)
-        //     // try {
-        //         // console.log("hit"),
-        //         const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
-        //         if(orderExist.length > 0){
-        //           console.log(`order with order number ${ord.order_number} exist in db`)
-        //           return
-        //         }
-                // const addressData: AddressType = {
-                //     address1: ord.shipping_address?.address1 || '',
-                //     address2: ord.shipping_address?.address2 || null,
-                //     city: ord.shipping_address?.city || '',
-                //     state: ord.shipping_address?.state || '',
-                //     zip: ord.shipping_address?.zip || '',
-                //     country: ord.shipping_address?.country || ''
+         const ord =ordersData[0]
+            console.log(ord)
+            // try {
+                // console.log("hit"),
+                const orderExist = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
+                if(orderExist.length > 0){
+                  console.log(`order with order number ${ord.order_number} exist in db`)
+                  return
+                }
+                const addressData: AddressType = {
+                    address1: ord.shipping_address?.address1 || '',
+                    address2: ord.shipping_address?.address2 || null,
+                    city: ord.shipping_address?.city || '',
+                    state: ord.shipping_address?.state || '',
+                    zip: ord.shipping_address?.zip || '',
+                    country: ord.shipping_address?.country || ''
+                };
+
+                const addressId = await db.insert(address).values(addressData).returning({id :address.id})
+                console.log(addressId)
+
+                // const holdsData: HoldsType = {
+                //     fraud_hold: ord.holds?.fraud_hold || false,
+                //     payment_hold: ord.holds?.payment_hold || false,
+                //     operator_hold: ord.holds?.operator_hold || false,
+                //     address_hold: ord.holds?.address_hold || false,
+                //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
+                //     client_hold: ord.holds?.client_hold || false
                 // };
 
-                // const addressId = await db.insert(address).values(addressData).returning({id :address.id})
-                // console.log(addressId)
+                // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+                // console.log(holdsData)
+                // console.log(holdsId)
 
-                // // const holdsData: HoldsType = {
-                // //     fraud_hold: ord.holds?.fraud_hold || false,
-                // //     payment_hold: ord.holds?.payment_hold || false,
-                // //     operator_hold: ord.holds?.operator_hold || false,
-                // //     address_hold: ord.holds?.address_hold || false,
-                // //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
-                // //     client_hold: ord.holds?.client_hold || false
-                // // };
+                const orderData: OrderType = {
+                    order_id :ord?.id,
+                    legacy_id :ord?.legacy_id,
+                    shop_name: ord?.shop_name,
+                    account_id: ord?.account_id || '',
+                    profile: ord?.profile || '',
+                    email: ord?.email || '',
+                    order_number: ord?.order_number || '',
+                    fulfillment_status: ord.fulfillment_status || '',
+                    order_date: new Date(ord.order_date!),
+                    total_tax: parseFloat(ord.total_tax!) as any ,
+                    subtotal: parseFloat(ord.subtotal!) as any,
+                    total_price: parseFloat(ord.total_price!) as any, 
+                    total_discounts: parseFloat(ord.total_discounts!) as any,
+                  //  holds_id: holdsId[0].id ,
+                    shipping_address_id: addressId[0].id
+                };
+                console.log(orderData)
 
-                // // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
-                // // console.log(holdsData)
-                // // console.log(holdsId)
-
-                // const orderData: OrderType = {
-                //     order_id :ord?.id,
-                //     legacy_id :ord?.legacy_id,
-                //     shop_name: ord?.shop_name,
-                //     account_id: ord?.account_id || '',
-                //     profile: ord?.profile || '',
-                //     email: ord?.email || '',
-                //     order_number: ord?.order_number || '',
-                //     fulfillment_status: ord.fulfillment_status || '',
-                //     order_date: new Date(ord.order_date!),
-                //     total_tax: parseFloat(ord.total_tax!) as any ,
-                //     subtotal: parseFloat(ord.subtotal!) as any,
-                //     total_price: parseFloat(ord.total_price!) as any, 
-                //     total_discounts: parseFloat(ord.total_discounts!) as any,
-                //   //  holds_id: holdsId[0].id ,
-                //     shipping_address_id: addressId[0].id
-                // };
-                // console.log(orderData)
-
-                // const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
-                // console.log(orderId)
+                const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
+                console.log(orderId)
 
 
 
 
                 
-//                 console.log(`Order with order number ${ord.order_number} inserted successfully.`);
-//             // } catch (error: unknown) {
-//             //     console.log(error)
-//             // }
-//         }));
-//     // } catch (error) {
-//     //     console.error('Error inserting complete order data:', error);
-//     //     throw error;
-//     // }
-//     return
+                console.log(`Order with order number ${ord.order_number} inserted successfully.`);
+            // } catch (error: unknown) {
+            //     console.log(error)
+            // }
+        // }));
+    // } catch (error) {
+    //     console.error('Error inserting complete order data:', error);
+    //     throw error;
+    // }
+    return
 
-// }
+}
 
 // export async function insertCompleteOrder(ordersData: any): Promise<void> {
 //   // Consider adding basic input validation to prevent unexpected errors
@@ -288,96 +288,96 @@ export async function insertTote(data: any): Promise<void> {
 
 //   return;
 // }
-export async function insertCompleteOrder(ordersData: any) {
-  // Consider adding basic input validation to prevent unexpected errors
-  if (!Array.isArray(ordersData)) {
-    throw new Error('Invalid ordersData. Must be an array.');
-  }
+// export async function insertCompleteOrder(ordersData: any) {
+//   // Consider adding basic input validation to prevent unexpected errors
+//   if (!Array.isArray(ordersData)) {
+//     throw new Error('Invalid ordersData. Must be an array.');
+//   }
 
   
-  try {
-    let i =0
+//   try {
+//     let i =0
 
-    for (const ord of ordersData) {
-      i++
-      try {
+//     for (const ord of ordersData) {
+//       i++
+//       try {
 
 
-        const existingOrder = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
+//         const existingOrder = await db.select().from(order).where(eq(order.order_number, ord.order_number)).execute();
   
-        if (existingOrder.length > 0) {
-          console.log(`Order with order number ${ord.order_number} already exists in db`);
-          continue; // Skip insertion if order already exists (optional)
-        }
+//         if (existingOrder.length > 0) {
+//           console.log(`Order with order number ${ord.order_number} already exists in db`);
+//           continue; // Skip insertion if order already exists (optional)
+//         }
   
   
   
-        const addressData: AddressType = {
-          address1: ord.shipping_address?.address1 || '',
-          address2: ord.shipping_address?.address2 || null,
-          city: ord.shipping_address?.city || '',
-          state: ord.shipping_address?.state || '',
-          zip: ord.shipping_address?.zip || '',
-          country: ord.shipping_address?.country || ''
-      };
+//         const addressData: AddressType = {
+//           address1: ord.shipping_address?.address1 || '',
+//           address2: ord.shipping_address?.address2 || null,
+//           city: ord.shipping_address?.city || '',
+//           state: ord.shipping_address?.state || '',
+//           zip: ord.shipping_address?.zip || '',
+//           country: ord.shipping_address?.country || ''
+//       };
   
-      const addressId = await db.insert(address).values(addressData).returning({id :address.id})
-      console.log(addressId)
+//       const addressId = await db.insert(address).values(addressData).returning({id :address.id})
+//       console.log(addressId)
   
-      // const holdsData: HoldsType = {
-      //     fraud_hold: ord.holds?.fraud_hold || false,
-      //     payment_hold: ord.holds?.payment_hold || false,
-      //     operator_hold: ord.holds?.operator_hold || false,
-      //     address_hold: ord.holds?.address_hold || false,
-      //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
-      //     client_hold: ord.holds?.client_hold || false
-      // };
+//       // const holdsData: HoldsType = {
+//       //     fraud_hold: ord.holds?.fraud_hold || false,
+//       //     payment_hold: ord.holds?.payment_hold || false,
+//       //     operator_hold: ord.holds?.operator_hold || false,
+//       //     address_hold: ord.holds?.address_hold || false,
+//       //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
+//       //     client_hold: ord.holds?.client_hold || false
+//       // };
   
-      // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
-      // console.log(holdsData)
-      // console.log(holdsId)
+//       // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+//       // console.log(holdsData)
+//       // console.log(holdsId)
   
-      const orderData: OrderType = {
-          order_id :ord?.id,
-          legacy_id :ord?.legacy_id,
-          shop_name: ord?.shop_name,
-          account_id: ord?.account_id || '',
-          profile: ord?.profile || '',
-          email: ord?.email || '',
-          order_number: ord?.order_number || '',
-          fulfillment_status: ord.fulfillment_status || '',
-          order_date: new Date(ord.order_date!),
-          total_tax: parseFloat(ord.total_tax!) as any ,
-          subtotal: parseFloat(ord.subtotal!) as any,
-          total_price: parseFloat(ord.total_price!) as any, 
-          total_discounts: parseFloat(ord.total_discounts!) as any,
-        //  holds_id: holdsId[0].id ,
-          shipping_address_id: addressId[0].id
-      };
-      console.log(orderData)
+//       const orderData: OrderType = {
+//           order_id :ord?.id,
+//           legacy_id :ord?.legacy_id,
+//           shop_name: ord?.shop_name,
+//           account_id: ord?.account_id || '',
+//           profile: ord?.profile || '',
+//           email: ord?.email || '',
+//           order_number: ord?.order_number || '',
+//           fulfillment_status: ord.fulfillment_status || '',
+//           order_date: new Date(ord.order_date!),
+//           total_tax: parseFloat(ord.total_tax!) as any ,
+//           subtotal: parseFloat(ord.subtotal!) as any,
+//           total_price: parseFloat(ord.total_price!) as any, 
+//           total_discounts: parseFloat(ord.total_discounts!) as any,
+//         //  holds_id: holdsId[0].id ,
+//           shipping_address_id: addressId[0].id
+//       };
+//       console.log(orderData)
   
-      const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
-      console.log(orderId)
+//       const orderId = await db.insert(order).values(orderData).returning({ id: order.id });
+//       console.log(orderId)
 
-      }catch(error){
-        console.log(error)
+//       }catch(error){
+//         console.log(error)
 
-          console.log (`an error accoured after inserting oreder no ${i}` )
-      }
-      console.log(i)
+//           console.log (`an error accoured after inserting oreder no ${i}` )
+//       }
+//       console.log(i)
       
-    }
+//     }
 
 
 
 
-  } catch (error) {
-    console.log('Error inserting complete order data:', error);
-    throw error; // Re-throw for handling at a higher level
-  }
+//   } catch (error) {
+//     console.log('Error inserting complete order data:', error);
+//     throw error; // Re-throw for handling at a higher level
+//   }
 
-  return "success";
-}
+//   return "success";
+// }
 
 export async function getOrders() {
  
