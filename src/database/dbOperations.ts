@@ -146,9 +146,9 @@ export async function insertTote(data: any): Promise<void> {
   export async function insertCompleteOrder(ordersData: any) {
     //  console.log(ordersData);``
     // try {
-       //  await Promise.all(ordersData.map(async (ord: any) => {
+         await Promise.all(ordersData.map(async (ord: any) => {
 
-         const ord =ordersData[0]
+        // const ord =ordersData[0]
             logger.info(ord)
             // try {
                 // console.log("hit"),
@@ -216,13 +216,13 @@ export async function insertTote(data: any): Promise<void> {
                   // } catch (error: unknown) {
                   //     console.log(error)
                   // }
-              // }));
-          // } catch (error) {
-          //     console.error('Error inserting complete order data:', error);
-          //     throw error;
-          // }
-          return `inserted order with orderid ${orderInsertionResponse[0].id}`
-   }
+                  // } catch (error) {
+                    //     console.error('Error inserting complete order data:', error);
+                    //     throw error;
+                    // }
+                    // return `inserted order with orderid ${orderInsertionResponse[0].id}`
+                  }
+                }));
 
 }
 

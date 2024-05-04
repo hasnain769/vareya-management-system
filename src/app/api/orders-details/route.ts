@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
     // console.log(graphqlData)
     const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
     
-    logger.info(ordersData[0])
+    logger.info(`Orders get from shiphero on ${ordersToDate.toISOString()}` ,ordersData)
     try {
       const result = await insertCompleteOrder(ordersData)
       logger.info(result)
