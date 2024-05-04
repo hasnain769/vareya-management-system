@@ -126,6 +126,7 @@ export async function GET(req: NextRequest) {
     logger.info(ordersData)
     try {
       const result = await insertCompleteOrder(ordersData)
+      return NextResponse.json(result);
       logger.info(result)
     }
     catch (error) {
@@ -133,7 +134,7 @@ export async function GET(req: NextRequest) {
       logger.info(error)
     }
     
-    return NextResponse.json(ordersData);
+    // return NextResponse.json(ordersData);
   } catch (error : any) {
     // If an error occurs during the process, return an error response
     console.log("Error:", error.Error.message);
