@@ -74,7 +74,7 @@ export default  function OrderDetailsPage() {
   },[])
 
   
-  
+  console.log(paymentSummery)
   if (!item) {
     return (
       <div className="flex items-center justify-center h-screen w-full">
@@ -365,7 +365,8 @@ export default  function OrderDetailsPage() {
                     <TableCell>{paymentSummery?.card_type || "N/A"} </TableCell>
                     <TableCell>${paymentSummery?.postauthed_amount}</TableCell>
                     <TableCell>${paymentSummery?.authorized_amount}</TableCell>
-                    <TableCell>{paymentSummery?.refunded_amount}</TableCell>
+                    <TableCell>${paymentSummery?.refunded_amount}</TableCell>
+                    <TableCell>{paymentSummery?.date?.toLocaleString()}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
