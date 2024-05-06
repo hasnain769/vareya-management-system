@@ -16,6 +16,8 @@ import {
     AddressType,
     HoldsType,
     ShipmentType,
+    PaymentType,
+    payments
 
  
 } from '@/database/schema';
@@ -172,7 +174,16 @@ export async function insertTote(data: any): Promise<void> {
   
                   const addressResponse = await db.insert(address).values(addressData).returning({id :address.id})
                   logger.info(`shipping adddress with ${addressResponse[0].id}`)
-  
+                  
+                  const paymentsData : PaymentType ={
+                    transaction_id : ord.authorizations[0].transaction_id,
+                    date : ord.authorizations[0].date,
+                    postauthed_amount: ord.authorizations[0].postauthed_amount,
+                    authorized_amount: ord.authorizations[0].authorized_amount,
+                    refunded_amount: ord.authorizations[0].refunded_amount
+                  }
+                  const paymentsResponse = await db.insert(payments).values(paymentsData).returning({id :payments.id})
+                  logger.info(`payments deteails inserted with id  ${paymentsResponse[0].id}`)
                   // const holdsData: HoldsType = {
                   //     fraud_hold: ord.holds?.fraud_hold || false,
                   //     payment_hold: ord.holds?.payment_hold || false,
@@ -200,6 +211,7 @@ export async function insertTote(data: any): Promise<void> {
                       subtotal: parseFloat(ord.subtotal!) as any,
                       total_price: parseFloat(ord.total_price!) as any, 
                       total_discounts: parseFloat(ord.total_discounts!) as any,
+                      payments_id : paymentsResponse[0].id,
                     //  holds_id: holdsId[0].id ,
                       shipping_address_id: addressResponse[0].id
                   };

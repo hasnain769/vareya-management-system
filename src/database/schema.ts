@@ -64,6 +64,18 @@ export const holds = pgTable('holds', {
     client_hold: boolean('client_hold')
 });
 
+export const payments = pgTable('payments', {
+    id: serial("id").primaryKey(),
+    transaction_id: varchar('transaction_id'),
+    date: timestamp('date'),
+    postauthed_amount: varchar('postauthed_amount'),
+    authorized_amount: varchar('authorized_amount'),
+    refunded_amount: varchar('redunded_amount')
+
+});
+
+
+
 export const order = pgTable('order', {
     id: serial("id").primaryKey(),
     order_id : varchar("order_id"),
@@ -80,6 +92,7 @@ export const order = pgTable('order', {
     total_price: decimal('total_price'),
     total_discounts: decimal('total_discounts'),
     holds_id: integer('holds_id').references(() => holds.id),
+    payments_id: integer('payments_id').references(()=> payments.id),
     shipping_address_id: integer('shipping_address_id').references(() => address.id),
     billing_address_id: integer('billing_address_id').references(() => address.id),
     //pick : varchar("pick").references(() => order_allocated.order_number),
@@ -99,3 +112,4 @@ export type HoldsType = typeof holds.$inferInsert;
 export type OrderType = typeof order.$inferInsert;
 // export type ShippingLabelType = typeof shippingLabel.$inferInsert;
 export type ShipmentType = typeof shipment.$inferInsert;
+export type PaymentType = typeof payments.$inferInsert;

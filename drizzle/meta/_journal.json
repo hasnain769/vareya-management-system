@@ -15,6 +15,13 @@
       "when": 1714847229921,
       "tag": "0001_natural_tempest",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714985637392,
+      "tag": "0002_puzzling_tigra",
+      "breakpoints": true
     }
   ]
 }

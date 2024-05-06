@@ -88,13 +88,7 @@ export async function POST(req: NextRequest) {
                         authorized_amount
                         refunded_amount
                       }
-                  billing_address{
-                    address1
-                    address2
-                    state
-                    country
-                    country_code
-                  }
+                 
                      
                 
                   }
