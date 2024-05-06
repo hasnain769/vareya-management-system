@@ -81,7 +81,7 @@ export default function Dashboard() {
                   <TableCell className="font-medium">{i+1}</TableCell>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
-                  <TableCell>{item.fulfillment_status}</TableCell>
+                  <TableCell>{item.fulfillment_status}</TableCell> 
                   <TableCell>{item.order_date?.toLocaleString()}</TableCell>
                   <TableCell>{item.total_price}</TableCell>
 
