@@ -92,7 +92,64 @@ export default  function OrderDetailsPage() {
 
   return (
     <div className="bg-white">
+      <div className="bg-gray-100 p-1 flex justify-between items-center">
+        <div className='ml-3'>
+          <h1 className="text-lg text-gray-500">Order</h1>
+          <h2 className='font-bold text-xl'>{item.order_number}</h2>
+        </div>
+        <div>
+          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
+            Follow
+          </button>
+          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
+            Edit
+          </button>
+          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
+            Convert
+          </button>
+          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-4 hover:bg-gray-50">
+            Submit for Approval
+          </button>
+        </div>
+      </div>
+       {/* Data Header  */}
+    <div className="bg-white shadow ">
+      <div className="w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 ">
+        <div className="grid grid-cols-6 gap-4 mb-2 ">
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Order Number</h1>
+          </div>
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Email</h1>
+          </div>
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Account</h1>
+          </div>
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Subtotal</h1>
+          </div>
+        </div>
+
+        {/* Data Row */}
+        <div className="grid grid-cols-6 gap-4">
+          <div className="col-span-1">
+            <p className=" font-semibold text-gray-700">{item.order_number}</p>
+          </div>
+          <div className="col-span-1">
+            <p className="text-sm font-semibold text-gray-700">{item.email}</p>
+          </div>
+          <div className="col-span-1">
+            <p className=" font-semibold text-gray-700">{item.profile}</p>
+          </div>
+          <div className="col-span-1">
+            <p className=" font-semibold text-gray-700">{item.subtotal}</p>
+          </div>
+         
+        </div>
+      </div>
+    </div>
       <div className="flex flex-col lg:flex-row">
+          
         <div className="w-full lg:w-1/4 p-4 border-r">
           <Card className="mb-4">
             <CardHeader>
