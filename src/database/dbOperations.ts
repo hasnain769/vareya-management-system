@@ -178,7 +178,7 @@ export async function insertTote(data: any): Promise<void> {
                   
                   const paymentsData : PaymentType ={
                     transaction_id : ord.authorizations[0]?.transaction_id || "",
-                    date : ord.authorizations[0]?.date || " ",
+                    //date : new Date (ord.authorizations[0]?.date )|| " ",
                     card_type : ord.authorizations[0]?.card_type ,
                     postauthed_amount: ord.authorizations[0]?.postauthed_amount || "",
                     authorized_amount: ord.authorizations[0]?.authorized_amount ||"",
