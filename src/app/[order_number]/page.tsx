@@ -5,9 +5,9 @@ import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import {  getLineItems, getSingleOrder, getaddresses, orderstatus } from "@/database/dbOperations"
+import {  getLineItems, getPaymentSummery, getSingleOrder, getaddresses, orderstatus } from "@/database/dbOperations"
 import { useEffect, useState } from "react"
-import { AddressType, LineItemType, OrderType, ShipmentType } from "@/database/schema"
+import { AddressType, LineItemType, OrderType, ShipmentType ,PaymentType } from "@/database/schema"
 // import { useStore } from "@/store"
 import { useSearchParams , useRouter} from "next/navigation"
 //import { useRouter } from 'next/router';
@@ -18,6 +18,7 @@ export default  function OrderDetailsPage() {
   const [address, setAddress] = useState <AddressType[]>([])
   const[status , setstatus] = useState<ShipmentType []> ([])
   const [lineItems, setlineItem] = useState < any | null>(null)
+  const [paymentSummery , setPaymentSummery] = useState<PaymentType> ()
   const searchParams = useSearchParams()
  
   const id = searchParams.get('id')
@@ -32,10 +33,13 @@ export default  function OrderDetailsPage() {
       let addr : any =""
       let orderNumber : any = ""
       let Oid : any = ""
+      let PaymentId : any= ""
       try{
 
         const result = await getSingleOrder(id)
         addr = result[0]?.shipping_address_id 
+        PaymentId = result[0].payments_id
+
         orderNumber = result[0]?.order_number
         Oid = result[0]?.order_id
         console.log(Oid)
@@ -44,8 +48,10 @@ export default  function OrderDetailsPage() {
 
         console.log(orderNumber)
         const add = await getaddresses(addr)
+        const paymentsDetails = await getPaymentSummery(PaymentId)
         const statusData = (await orderstatus(orderNumber)).reverse()
         setAddress(add)
+        setPaymentSummery(paymentsDetails[0])
         setstatus(statusData)
         try {
 
@@ -66,6 +72,8 @@ export default  function OrderDetailsPage() {
 
 
   },[])
+
+  
   
   if (!item) {
     return (
@@ -346,20 +354,19 @@ export default  function OrderDetailsPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Method</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Authorized</TableHead>
-                    <TableHead>Captured</TableHead>
-                    <TableHead>Refunded</TableHead>
+                    <TableHead>Authorized Amount</TableHead>
+                    <TableHead>Post Authorized Amount</TableHead>
+                    <TableHead>Refunded Amount</TableHead>
+                    <TableHead>Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {/* <TableRow>
-                    <TableCell>Visa - 1111</TableCell>
-                    <TableCell>Jessica Carvajal</TableCell>
-                    <TableCell>$217.34</TableCell>
-                    <TableCell>$0.00</TableCell>
-                    <TableCell>$0.00</TableCell>
-                  </TableRow> */}
+                  <TableRow>
+                    <TableCell>{paymentSummery?.card_type || "N/A"} </TableCell>
+                    <TableCell>${paymentSummery?.postauthed_amount}</TableCell>
+                    <TableCell>${paymentSummery?.authorized_amount}</TableCell>
+                    <TableCell>{paymentSummery?.refunded_amount}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </CardContent>

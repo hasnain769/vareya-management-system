@@ -421,6 +421,12 @@ export async function getaddresses(id: any) {
   console.log(data)
   return data
 }
+export async function getPaymentSummery(id: any) {
+  console.log(id)
+  const data = await db.select().from(payments).where(eq(payments.id , id)).execute()
+  console.log(data)
+  return data
+}
 
 export async function getLineItems(orderNumber: any ,id : any ,itt : number) {
   console.log(id);
