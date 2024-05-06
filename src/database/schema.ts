@@ -67,10 +67,11 @@ export const holds = pgTable('holds', {
 export const payments = pgTable('payments', {
     id: serial("id").primaryKey(),
     transaction_id: varchar('transaction_id'),
+    card_type: varchar('card_type'),
     date: timestamp('date'),
     postauthed_amount: varchar('postauthed_amount'),
     authorized_amount: varchar('authorized_amount'),
-    refunded_amount: varchar('redunded_amount')
+    refunded_amount: varchar('refunded_amount')
 
 });
 

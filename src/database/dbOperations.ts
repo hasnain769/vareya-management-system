@@ -149,6 +149,7 @@ export async function insertTote(data: any): Promise<void> {
     //  console.log(ordersData);``
     // try {
         const ordersResponse = await Promise.all(ordersData.map(async (ord: any) => {
+          console.log(ord)
 
         // const ord =ordersData[0]
             logger.info(ord)
@@ -176,14 +177,16 @@ export async function insertTote(data: any): Promise<void> {
                   logger.info(`shipping adddress with ${addressResponse[0].id}`)
                   
                   const paymentsData : PaymentType ={
-                    transaction_id : ord.authorizations[0].transaction_id,
-                    date : ord.authorizations[0].date,
-                    postauthed_amount: ord.authorizations[0].postauthed_amount,
-                    authorized_amount: ord.authorizations[0].authorized_amount,
+                    transaction_id : ord.authorizations[0]?.transaction_id || "",
+                   // date : ord.authorizations[0]?.date || " ",
+                   card_type : ord.authorizations[0]?.card_type ,
+                    postauthed_amount: ord.authorizations[0]?.postauthed_amount || "",
+                    authorized_amount: ord.authorizations[0]?.authorized_amount ||"",
                     refunded_amount: ord.authorizations[0].refunded_amount
                   }
+                  console.log(paymentsData)
                   const paymentsResponse = await db.insert(payments).values(paymentsData).returning({id :payments.id})
-                  logger.info(`payments deteails inserted with id  ${paymentsResponse[0].id}`)
+                 // logger.info(`payments deteails inserted with id  ${paymentsResponse[0].id}`)
                   // const holdsData: HoldsType = {
                   //     fraud_hold: ord.holds?.fraud_hold || false,
                   //     payment_hold: ord.holds?.payment_hold || false,
