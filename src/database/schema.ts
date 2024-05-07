@@ -77,7 +77,7 @@ export const payments = pgTable('payments', {
 
 
 
-export const order = pgTable('order', {
+export const order = pgTable('order', { 
     id: serial("id").primaryKey(),
     order_id : varchar("order_id"),
     legacy_id: integer('legacy_id'),
@@ -111,6 +111,7 @@ export type AddressType = typeof address.$inferInsert;
 export type LineItemType = typeof lineItem.$inferInsert;
 export type HoldsType = typeof holds.$inferInsert;
 export type OrderType = typeof order.$inferInsert;
+export type Order = typeof order.$inferSelect;
 // export type ShippingLabelType = typeof shippingLabel.$inferInsert;
 export type ShipmentType = typeof shipment.$inferInsert;
 export type PaymentType = typeof payments.$inferInsert;
