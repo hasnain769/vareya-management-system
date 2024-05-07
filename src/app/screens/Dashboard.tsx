@@ -1,4 +1,3 @@
-"use client";
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
@@ -7,59 +6,37 @@ import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 // import { useStore } from "@/store";
-import { OrderType } from "@/database/schema";
+import { Order, OrderType, order } from "@/database/schema";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getOrders } from "@/database/dbOperations";
+import { date } from "drizzle-orm/mysql-core";
 
 
 
-export default function Dashboard() {
-  const router  = useRouter()
-  const [orders ,setorders] = useState<OrderType[]>([])
-
-  console.log("dashboard loaded")
-
-
-
-
-  useEffect(() => {
-    // const fetchOrdersFromStore = useStore((state) => state.fetchOrders);
-    // const fetchedOrders = useStore((state) => state.orders);
-    
-    const fetchOrders = async () => {
-      
-      const result = (await getOrders()).reverse()
-      const data = result
-      setorders(data as any)
-      
-
-    };
-
-     fetchOrders();
-  }, []);
-  function handleDetailshow(item:OrderType){
-        router.push(`/order?id=${item.id as number}`)
-        return
-
+async function getListOrders() {
+  const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-cache"});
+  if (!response.ok) {
+      throw new Error('Network response was not ok');
   }
- 
+  const data = await response.json(); 
+  
+      return data.allOrders as Order[];
+}
+
+export async function Dashboard() {
+  const order=await getListOrders(); // Data fetching on the server
+  console.log(order);
   return (
-
-    <>
-      
-
-    
+      <>
         <div className="bg-white dark:bg-gray-900">
-        <div className="flex flex-col">
-          
-          <div className="flex items-center justify-between px-6 py-2">
-            <div className="flex space-x-2">
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between px-6 py-2">
+              <div className="flex space-x-2">
               <ListIcon className="text-gray-600 dark:text-gray-300" />
-              <span className="text-sm font-medium">{orders.length} items- Updated a few seconds ago</span>
+              {/* <span className="text-sm font-medium">{order.length} items- Updated a few seconds ago</span> */}
+              </div>
             </div>
-            
-          </div>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -75,10 +52,9 @@ export default function Dashboard() {
               <TableBody>
               {
                 
-                orders.map((item : OrderType ,i)=>(
-                  <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={()=>handleDetailshow(item)} key={i}>
-
-                  <TableCell className="font-medium">{i+1}</TableCell>
+                Array.isArray(order) && order.map((item : Order ,i)=>(
+                  <TableRow key={item.id} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+                  <TableCell className="font-medium"><Link href={"/orders/" + item.id}>{i+1}</Link></TableCell>
                   <TableCell className="font-medium">{item.order_number}</TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell> 
@@ -100,7 +76,7 @@ export default function Dashboard() {
               <InfoIcon className="text-gray-600 dark:text-gray-300" />
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline">Previous</Button>
+              <Button>Previous</Button>
               <Button>Next</Button>
             </div>
           </div>
