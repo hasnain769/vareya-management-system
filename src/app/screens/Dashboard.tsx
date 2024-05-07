@@ -54,8 +54,8 @@ export async function Dashboard() {
                 
                 Array.isArray(order) && order.map((item : Order ,i)=>(
                   <TableRow key={item.id} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-                  <TableCell className="font-medium"><Link href={"/orders/" + item.id}>{i+1}</Link></TableCell>
-                  <TableCell className="font-medium">{item.order_number}</TableCell>
+                  <TableCell className="font-medium">{i+1}</TableCell>
+                  <TableCell className="font-medium text-blue-500 underline-offset-2"><Link href={"/orders/" + item.id}>{item.order_number}</Link></TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell> 
                   <TableCell>{item.order_date?.toLocaleString()}</TableCell>
