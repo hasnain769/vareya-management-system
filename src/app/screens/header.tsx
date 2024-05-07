@@ -4,6 +4,7 @@ import { Toggle } from "@/components/ui/toggle";
 import logo from "@/app/assets/vareyaLogo.png"
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -23,7 +24,7 @@ export default function Header() {
               <nav className="flex space-x-6">
                 <ol className="  hover:bg-slate-200 focus:bg-slate-200 cursor-pointer" >Fulfillments</ol>
                 <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Addresses</ol>
-                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Payments</ol>
+                <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer"><Link href="/payments">Payments</Link></ol>
                 <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Accounts</ol>
                 <ol className="   hover:bg-slate-200 focus:bg-slate-200 cursor-pointer">Support</ol>
                 

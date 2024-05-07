@@ -428,6 +428,12 @@ export async function getPaymentSummery(id: any) {
   return data
 }
 
+export async function getAllPaymentsData () {
+  const data = await db.select().from(payments)
+  console.log(data)
+  return data 
+}
+
 export async function getLineItems(orderNumber: any ,id : any ,itt : number) {
   console.log(id);
   
