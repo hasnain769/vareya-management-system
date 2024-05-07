@@ -12,6 +12,7 @@ import { AddressType, LineItemType, OrderType, ShipmentType ,PaymentType } from 
 import { useSearchParams , useRouter} from "next/navigation"
 //import { useRouter } from 'next/router';
 import PathComponent from "../screens/pathComponent"
+import { StatusIndicator } from "@/components/ui/status-indicator"
 
 export default  function OrderDetailsPage() {
   const [item ,setItem] = useState <OrderType> ()
@@ -92,110 +93,101 @@ export default  function OrderDetailsPage() {
 
   return (
     <div className="bg-white">
+       {/* Page Header  */}
       <div className="bg-gray-100 p-1 flex justify-between items-center">
         <div className='ml-3'>
           <h1 className="text-lg text-gray-500">Order</h1>
           <h2 className='font-bold text-xl'>{item.order_number}</h2>
         </div>
         <div>
+        
           <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
-            Follow
-          </button>
-          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
-            Edit
+            History
           </button>
           <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 hover:bg-gray-50">
-            Convert
+            Discount Item
           </button>
-          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-4 hover:bg-gray-50">
-            Submit for Approval
+          <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-3 hover:bg-gray-50">
+            Cancel
           </button>
+          {/* <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-4 hover:bg-gray-50">
+
+          </button> */}
         </div>
       </div>
-       {/* Data Header  */}
     <div className="bg-white shadow ">
-      <div className="w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 ">
+      <div className="w-full mx-auto py-2 px-4 sm:px-6 lg:px-4">
         <div className="grid grid-cols-6 gap-4 mb-2 ">
-          <div className="col-span-1">
+        <div className="col-span-1">
             <h1 className="text-sm  text-gray-500">Order Number</h1>
+          </div>
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Shop Name</h1>
           </div>
           <div className="col-span-1">
             <h1 className="text-sm  text-gray-500">Email</h1>
           </div>
           <div className="col-span-1">
-            <h1 className="text-sm  text-gray-500">Account</h1>
+            <h1 className="text-sm  text-gray-500">Customer</h1>
           </div>
-          <div className="col-span-1">
-            <h1 className="text-sm  text-gray-500">Subtotal</h1>
-          </div>
+         
         </div>
-
-        {/* Data Row */}
         <div className="grid grid-cols-6 gap-4">
-          <div className="col-span-1">
+        <div className="col-span-1">
             <p className=" font-semibold text-gray-700">{item.order_number}</p>
           </div>
           <div className="col-span-1">
-            <p className="text-sm font-semibold text-gray-700">{item.email}</p>
+            <p className=" font-semibold text-gray-700">{item.shop_name}</p>
           </div>
           <div className="col-span-1">
-            <p className=" font-semibold text-gray-700">{item.profile}</p>
+            <p className=" font-semibold text-gray-700">{item.email}</p>
           </div>
           <div className="col-span-1">
-            <p className=" font-semibold text-gray-700">{item.subtotal}</p>
+            <p className=" font-semibold text-blue-500 underline underline-offset-2"><Link href={""}>Customer Name</Link></p>
           </div>
+         
          
         </div>
       </div>
     </div>
+
+    {/* Status Indicator */}
+    <StatusIndicator/>
+    
+    {/* Totals Panel */}
       <div className="flex flex-col lg:flex-row">
-          
-        <div className="w-full lg:w-1/4 p-4 border-r">
-          <Card className="mb-4">
+        <div className="w-full lg:w-[22%] border">
+          <div className="mb-4 border-b">
             <CardHeader>
-              <CardTitle>Totals</CardTitle>
+              <h1 className="flex font-medium -mt-3 w-16 text-lg text-blue-700 border-b-2 border-blue-700">
+                Totals</h1>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>${item.subtotal}</span>
+              <div className="flex flex-col space-y-1 -mt-2">
+                <div className="flex flex-col justify-between border-gray-300 border-b">
+                  <span className="text-gray-700 font-medium">Subtotal</span>
+                  <span className="text-gray-600">${item.subtotal}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Discount</span>
-                  <span>${item.total_discounts}</span>
+                <div className="flex flex-col justify-between border-gray-300 border-b">
+                  <span className="text-gray-700 font-medium">Discount</span>
+                  <span className="text-gray-600">${item.total_discounts}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>${item.total_tax}</span>
+                <div className="flex flex-col justify-between border-gray-300 border-b" >
+                  <span className="text-gray-700 font-medium">Tax</span>
+                  <span className="text-gray-600">${item.total_tax}</span>
                 </div>
-                <div className="flex justify-between font-bold">
+                <div className="flex flex-col space-y-1 justify-between font-bold">
                   <span>Total</span>
                   <span>${item.total_price}</span>
                 </div>
               </div>
             </CardContent>
-          </Card>
-          <Card className="mb-4">
+          </div>
+          <div>
             <CardHeader>
-              <CardTitle>Actions & Recommendations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs>
-                
-                <div className="mt-4 flex flex-col space-y-3">
-                <Button variant="outline">History</Button>
-                <Button variant="outline">Discount Item</Button>
-                <Button variant="outline">Cancel</Button>
-                  
-                </div>
-              </Tabs>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Related List Quick Links</CardTitle>
+              <CardTitle className="flex font-medium -mt-3 w-24 text-lg text-blue-700 border-b-2 border-blue-700">
+                Related List</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-2">
@@ -208,121 +200,38 @@ export default  function OrderDetailsPage() {
                 <Button className="mt-2" variant="ghost">
                   Show All (11)
                 </Button>
-                
               </div>
             </CardContent>
-          </Card>
+          </div>
         </div>
-        <div className="w-full lg:w-3/4 p-4">
-          <Card className="mb-4">
-            <CardHeader>
-              <CardTitle>Order Summary - {item.order_number}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="">
-              <div className="flex  py-8">
-        <div className="flex w-full max-w-4xl items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-9 w-24 items-center justify-center   rounded-r-[30px] bg-green-800 text-white dark:bg-primary-500">
-              <span className="text-sm font-medium">New Order</span>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex h-9 w-24 items-center justify-center   rounded-r-[30px] bg-green-800 text-white dark:bg-primary-500">
-              <span className="text-sm font-medium">Pick</span>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-          </div>
-         
-          <div className="flex items-center gap-4">
-            <div className="flex h-9 w-24 items-center justify-center   rounded-r-[30px] bg-green-800 text-white dark:bg-primary-500">
-              <span className="text-sm font-medium">Packed</span>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex h-9 w-24 items-center justify-center   rounded-r-[30px] bg-red-700 text-white dark:bg-primary-500">
-              <span className="text-sm font-medium">Shipped</span>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-            <div className="h-1 flex-1 bg-primary dark:bg-primary-500" />
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="flex h-9 w-24 items-center justify-center   bg-red-700 text-white dark:bg-primary-500">
-              <span className="text-sm font-medium">Delivered</span>
-            </div>
-          </div>
+
         
-        </div>
-      </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                  <div className="font-bold">{item.shop_name}</div>
-                  <div className="mt-1">
-                    <div>Account: {item.profile}</div>
-                  
-                    <div>Email: {item.email}</div>
-                    <div>SFCC Customer Number</div>
-                    <div>SFCC Customer ID : {item.account_id}</div>
-                  </div>
-                </div>
-                <div>
-                  <div className="font-bold">Billing Address</div>
-                  <div className="mt-1">
-                    <div>{address[0]?.address1}</div>
-                    <div>{address[0]?.address2}</div>
-                    <div>{address[0]?.state} {address[0]?.country} {address[0]?.zip}</div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                 
-                </div>
-                <div>
-                  <div className="font-bold">Tax Locale Type</div>
-                  <div className="mt-1">Net</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="mb-4">
-  <CardHeader>
-    <CardTitle>Items</CardTitle>
-  </CardHeader>
+        <div className="bg-white shadow w-[80%] p-0">
+      <div className="border-t  border-gray-200">
+      <div className="flex border-b">
+          <button
+              className={`px-4 py-2 w-30 text-lg font-medium text-blue-700 border-b-2 border-blue-700
+            `}
+            >
+              Details
+            </button>
+            {/* <button
+              className={`px-4 py-2 w-30 text-lg font-medium text-gray-500`}
+            >
+              Marketing
+            </button>
+            <button
+              className={`px-4 py-2 w-30 text-lg font-medium text-gray-500`}
+            >
+              News
+            </button> */}
+          </div>
+        {/* {activeTab === 'details' && ( */}
+          {/* Items List*/}
+    <div className="space-y-2 shadow-sm w-[100%]">
+      <div className="flex text-lg font-semibold p-1">Order Items</div>
 
-  <CardContent>
-    {!lineItems  ? (
-
-      
-    <div className="flex space-x-2 justify-center items-center bg-white  dark:invert">
-    <span className='sr-only'>Loading...</span>
-
-  	<div className='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-	<div className='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-	<div className='h-3 w-3 bg-black rounded-full animate-bounce'></div>
-  </div>
-
-      
-  
-    ) : (
-      <Table>
+      <Table className=" border rounded-lg">
         <TableHeader>
           <TableRow>
             <TableHead>Product Name</TableHead>
@@ -332,53 +241,19 @@ export default  function OrderDetailsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {lineItems.map((item : any , i : number) => (
-            <TableRow key={i+1}>
+          {Array.isArray(lineItems) &&lineItems.map((item : any , i : number) => (
+            <TableRow key={i+1} className="text-[16px]">
               <TableCell>{item.product_name}</TableCell>
               <TableCell>{item.quantity }</TableCell>
               <TableCell>{item.price }</TableCell>
             </TableRow>
           ))}
         </TableBody>
-      </Table>
-    )}
-  </CardContent>
-</Card>
-          <Card className="mb-4">
-            <CardHeader>
-              <CardTitle>Tracking</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Tracking no</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>carrier</TableHead>
-                    <TableHead>Tracking Url</TableHead>
+     </Table>
+          {/* Shipping Adresses Table*/}
+          <div className="flex text-lg font-semibold p-1 ">Shipping Addresses (1)</div>
 
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  
-
-                  <TableRow >
-                  <TableCell>{status[0]?.tracking_number || " N/A"}</TableCell>
-                    <TableCell>{ status[0]?.status || "pending"}</TableCell>
-                    <TableCell>{status[0]?.shipping_carrier|| "N/A"}</TableCell>
-                  </TableRow>
-                
-                  
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-          <Card className="mb-4">
-            <CardHeader>
-              <CardTitle>Shipping Addresses (1)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
+          <Table className="border rounded-lg">
                 <TableHeader>
                   <TableRow>
                    
@@ -400,14 +275,8 @@ export default  function OrderDetailsPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Payment Summaries (1)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
+          <div className="flex text-lg font-semibold p-1 ">Order Payment Summaries (1)</div>
+          <Table className="border rounded-lg">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Method</TableHead>
@@ -427,10 +296,55 @@ export default  function OrderDetailsPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
-        </div>
       </div>
+
+          
+        {/* )} */}
+        {/* {activeTab === 'marketing' && ( */}
+          {/* <div className="px-4 py-5 border-t">
+            <h1>Marketing Data will appear here</h1>
+          </div> */}
+        {/* )} */}
+        {/* {activeTab === 'news' && ( */}
+          {/* <div className="px-4 py-5 border-t">
+            <h1>News Data will appear here</h1>
+          </div> */}
+        {/* )} */}
+       </div>
+      </div>
+
+       <div className="w-full lg:w-1/4 border">
+          {/* Cases */}
+          <div className="mb-4 border-b">
+          <CardHeader>
+              <h1 className="flex font-medium -mt-3 w-16 text-lg text-blue-700 border-b-2 border-blue-700">
+                Cases</h1>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Case Number</span>
+                  <span className="text-blue-500 underline underline-offset-2"><Link href={""}>32</Link></span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Subject</span>
+                  <span>Case subject </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium">Status</span>
+                  <span>New</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Date</span>
+                  <span>04-05-2024</span>
+                </div>
+              </div>
+              </CardContent>
+              </div>
+         
+      </div>
+    </div>
     </div>
   )
 }
