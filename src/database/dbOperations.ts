@@ -1,4 +1,4 @@
-import { db } from '@/database';
+import db from '@/database/dbClient';
 import { eq } from 'drizzle-orm';
 import { logger } from '@/utils/logger';
 import {
@@ -17,18 +17,11 @@ import {
     HoldsType,
     ShipmentType,
     PaymentType,
-    payments
-
- 
+    payments,
+    customers,
+    NewCustomer,
+    Customer
 } from '@/database/schema';
-
-import { Pool } from '@neondatabase/serverless';
-import { OrderData } from '@/utils/types';
-//import { logger } from '@/utils/logger'
-
-
-const client = new Pool()
-
 
 export async function orderstatus(id : any): Promise<any> {
   console.log(id)
@@ -46,7 +39,7 @@ export async function orderstatus(id : any): Promise<any> {
     }
     throw error;
   }
- }
+}
 
 export async function insertLineItem(data : LineItemType){
   await db.insert(lineItem).values(data);
@@ -66,7 +59,6 @@ export async function insertOrderAllocate(data: orderAllocatedType): Promise<voi
       console.log(error)
       //logger.error("An error occurred while inserting a new shipment into the database:", { errors: error.message });
     }
-   
   }
 }
 
@@ -159,10 +151,10 @@ export async function insertTote(data: any): Promise<void> {
                 logger.info(JSON.stringify(orderExist))
                 if(orderExist.length > 0){
                   console.log("orderExist")
-                 logger.info(`order with order number ${ord.order_number} exist in db`)
-                return `order ${ord.order_number} already exists`
-                }
-                else {
+                  logger.info(`order with order number ${ord.order_number} exist in db`)
+                  return `order ${ord.order_number} already exists`
+                
+                } else {
 
                   const addressData: AddressType = {
                       address1: ord.shipping_address?.address1 || '',
@@ -176,7 +168,17 @@ export async function insertTote(data: any): Promise<void> {
                   const addressResponse = await db.insert(address).values(addressData).returning({id :address.id})
                   logger.info(`shipping adddress with ${addressResponse[0].id}`)
                   
-                  const paymentsData : PaymentType ={
+                  const customerData: NewCustomer = {
+                    firstName: ord.shipping_address?.first_name || '',
+                    lastName: ord.shipping_address?.last_name || null,
+                    email: ord.shipping_address?.email || '',
+                    phone: ord.shipping_address?.phone || '',
+                };
+
+                const customerResponse = await db.insert(customers).values(customerData).returning({id :customers.id})
+                logger.info(`customer with ${customerResponse[0].id}`)
+                
+                const paymentsData : PaymentType ={
                     transaction_id : ord.authorizations[0]?.transaction_id || "",
                    // date : new Date (ord.authorizations[0]?.date )|| " ",
                     card_type : ord.authorizations[0]?.card_type ,
@@ -216,7 +218,8 @@ export async function insertTote(data: any): Promise<void> {
                       total_discounts: parseFloat(ord.total_discounts!) as any,
                       payments_id : paymentsResponse[0].id,
                     //  holds_id: holdsId[0].id ,
-                      shipping_address_id: addressResponse[0].id
+                      shipping_address_id: addressResponse[0].id,
+                      customer_id: customerResponse[0].id
                   };
                   console.log(orderData)
   
@@ -235,7 +238,7 @@ export async function insertTote(data: any): Promise<void> {
                     //     console.error('Error inserting complete order data:', error);
                     //     throw error;
                     // }
-                     return `inserted order ${ord.order_number}  with orderid ${orderInsertionResponse[0].id}`
+                    return `inserted order ${ord.order_number}  with orderid ${orderInsertionResponse[0].id}`
                   }
                 }));
 
@@ -408,9 +411,9 @@ export async function getOrders() {
   return data
 }
 export async function getSingleOrder(id : any) {
-  console.log(id)
+  console.log("database call - getSingleOrder:",id)
   const data = await db.select().from(order).where(eq(order.id,id))
-  console.log(data)
+  console.log("database data - getSingleOrder:",data)
   return data
 
 }
@@ -421,6 +424,7 @@ export async function getaddresses(id: any) {
   console.log(data)
   return data
 }
+
 export async function getPaymentSummery(id: any) {
   console.log(id)
   const data = await db.select().from(payments).where(eq(payments.id , id)).execute()
@@ -432,6 +436,13 @@ export async function getAllPaymentsData () {
   const data = await db.select().from(payments)
   console.log(data)
   return data 
+}
+
+export async function getCustomer(id: any) {
+  console.log(id)
+  const data = await db.select().from(customers).where(eq(customers.id , id)).execute()
+  console.log(data)
+  return data
 }
 
 export async function getLineItems(orderNumber: any ,id : any ,itt : number) {

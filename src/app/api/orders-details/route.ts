@@ -73,6 +73,10 @@ export async function POST(req: NextRequest) {
                         client_hold
                       }
                       shipping_address {
+                          first_name
+                          last_name
+                          email
+                          phone
                           address1
                           address2
                           city
@@ -88,9 +92,6 @@ export async function POST(req: NextRequest) {
                         authorized_amount
                         refunded_amount
                       }
-                 
-                     
-                
                   }
               }
           }

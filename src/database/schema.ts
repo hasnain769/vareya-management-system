@@ -1,7 +1,6 @@
 import { Table ,sql } from "drizzle-orm";
 import { pgTable, serial, timestamp, text, integer, varchar, decimal , real, boolean} from "drizzle-orm/pg-core";
 
-
 export const order_allocated = pgTable('order_allocated', {
     order_serial_no : serial("order_serial_no").primaryKey(),
     order_number: varchar('order_number'),
@@ -16,7 +15,6 @@ export const tote_complete = pgTable('tote_complete', {
     order_number: varchar('order_number').references(()=>order_allocated.order_number),
     status: varchar('status').default("packed")
 });
-
 
 export const order_packed_out = pgTable('order_packed_out', {
     order_serial_no: serial('order_serial_no').primaryKey(),
@@ -36,6 +34,14 @@ export const address = pgTable('address', {
     zip: varchar('zip'),
     country: varchar('country'),
     dummy : varchar('dummy')
+});
+
+export const customers = pgTable('customer', {
+    id: serial("id").primaryKey(),
+    firstName: varchar('first_name'),
+    lastName: varchar('last_name'),
+    email: varchar('email'),
+    phone: varchar('phone')
 });
 
 export const lineItem = pgTable('line_item', {
@@ -75,8 +81,6 @@ export const payments = pgTable('payments', {
 
 });
 
-
-
 export const order = pgTable('order', { 
     id: serial("id").primaryKey(),
     order_id : varchar("order_id"),
@@ -96,13 +100,9 @@ export const order = pgTable('order', {
     payments_id: integer('payments_id').references(()=> payments.id),
     shipping_address_id: integer('shipping_address_id').references(() => address.id),
     billing_address_id: integer('billing_address_id').references(() => address.id),
+    customer_id: integer('customer_id').references(() => customers.id),
     //pick : varchar("pick").references(() => order_allocated.order_number),
 });
-
-
-
-
-
 
 export type orderAllocatedType = typeof order_allocated.$inferInsert;
 export type toteCompleteType= typeof tote_complete.$inferInsert;
@@ -111,7 +111,15 @@ export type AddressType = typeof address.$inferInsert;
 export type LineItemType = typeof lineItem.$inferInsert;
 export type HoldsType = typeof holds.$inferInsert;
 export type OrderType = typeof order.$inferInsert;
-export type Order = typeof order.$inferSelect;
 // export type ShippingLabelType = typeof shippingLabel.$inferInsert;
 export type ShipmentType = typeof shipment.$inferInsert;
 export type PaymentType = typeof payments.$inferInsert;
+
+export type NewCustomer = typeof customers.$inferInsert;
+
+export type Order = typeof order.$inferSelect;
+export type Address = typeof address.$inferSelect;
+export type LineItem = typeof lineItem.$inferSelect;
+export type ShipmentStatus = typeof shipment.$inferSelect;
+export type Payment = typeof payments.$inferSelect;
+export type Customer = typeof customers.$inferSelect;

@@ -1,17 +1,10 @@
-import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { Toggle } from "@/components/ui/toggle";
-import { Input } from "@/components/ui/input";
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-// import { useStore } from "@/store";
-import { Order, OrderType, order } from "@/database/schema";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getOrders } from "@/database/dbOperations";
-import { date } from "drizzle-orm/mysql-core";
 
+import { Order } from "@/database/schema";
+import Link from "next/link";
+
+import React from "react"
 
 
 async function getListOrders() {
@@ -20,11 +13,13 @@ async function getListOrders() {
       throw new Error('Network response was not ok');
   }
   const data = await response.json(); 
-  
-      return data.allOrders as Order[];
+  return data.allOrders as Order[];
 }
 
-export async function Dashboard() {
+interface DashboardProps {
+};
+
+export default async function Dashboard() {
   const order=await getListOrders(); // Data fetching on the server
   console.log(order);
   return (
@@ -178,3 +173,5 @@ function StickyNoteIcon(props : any) {
     </svg>
   )
 }
+
+// export default Dashboard;

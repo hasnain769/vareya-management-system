@@ -1,94 +1,72 @@
-"use client"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
 import { Tabs } from "@/components/ui/tabs"
 import Link from "next/link"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import {  getLineItems, getPaymentSummery, getSingleOrder, getaddresses, orderstatus } from "@/database/dbOperations"
-import { useEffect, useState } from "react"
-import { AddressType, LineItemType, OrderType, ShipmentType ,PaymentType } from "@/database/schema"
+import {  getLineItems, getPaymentSummery, getSingleOrder, getaddresses, orderstatus, getCustomer } from "@/database/dbOperations"
+// import { useEffect, useState } from "react"
+import { Address, LineItem, Order, ShipmentStatus, Payment, Customer } from "@/database/schema"
 // import { useStore } from "@/store"
-import { useSearchParams , useRouter} from "next/navigation"
+// import { useSearchParams , useRouter} from "next/navigation"
 //import { useRouter } from 'next/router';
-import PathComponent from "./pathComponent"
+// import PathComponent from "./pathComponent"
 import { StatusIndicator } from "@/components/ui/status-indicator"
+import React from "react"
 
-export default  function OrderDetails({ params }: { params: { orderId: string } }) {
-  const [item ,setItem] = useState <OrderType> ()
-  const [address, setAddress] = useState <AddressType[]>([])
-  const[status , setstatus] = useState<ShipmentType []> ([])
-  const [lineItems, setlineItem] = useState < any | null>(null)
-  const [paymentSummery , setPaymentSummery] = useState<PaymentType> ()
-  const searchParams = useSearchParams()
- 
-  // const id = searchParams.get('id')
-  const id = params.orderId
+const fetchSingleOrderDetails =async (id: number)=>{
+  console.log("server component - fetchSingleOrderDetails:",id)
+  const result = await getSingleOrder(id)
+  return result[0];
+}
+
+const fetchAddresses = async (addrId: number)=>{
+  const addrData = await getaddresses(addrId)
+  return addrData;
+}
+
+const fetchPayments =async (paymentSummaryId: number)=>{
+  const paymentData = await getPaymentSummery(paymentSummaryId)
+  return paymentData;
+}  
+const fetchStatuses =async (orderNumber: string)=>{
+  const statusData = (await orderstatus(orderNumber)).reverse()
+  return statusData;
+}  
+const fetchLineItems =async (orderId: number)=>{
+  const response = await fetch(`${process.env.API_URL_ORDER_DETAILS_VIA_SHIPHERO}?id=${orderId}`);
+  const lineItemsData =await response.json()
+  console.log(lineItemsData);
+  return lineItemsData;
+}
+
+const fetchCustomer = async (customerId: number)=>{
+  const customerData = await getCustomer(customerId)
+  return customerData;
+}
+
+interface OrderDetailsProps {
+  params: {
+    orderId: string
+  };
+}
+
+const OrderDetails: React.FC<OrderDetailsProps> = async (orderDetailProps) => {
+// export default async function OrderDetails({ params }: { params: { orderId: string } }) {
+  const id = orderDetailProps.params.orderId;
   console.log("Opening detail page for ID:",id)
- 
 
-  useEffect(()=>{
-    const fetchDetails =async ()=>{
-      console.log(id)
-      let addr : any =""
-      let orderNumber : any = ""
-      let Oid : any = ""
-      let PaymentId : any= ""
-      try{
+  const item:Order = await fetchSingleOrderDetails(id as unknown as number);
 
-        const result = await getSingleOrder(id)
-        addr = result[0]?.shipping_address_id 
-        PaymentId = result[0].payments_id
+  const address:Address[] = (await fetchAddresses(item?.shipping_address_id!)) as unknown as Address[];
 
-        orderNumber = result[0]?.order_number
-        Oid = result[0]?.order_id
-        console.log(Oid)
-        setItem(result[0])
-      }finally{
+  const customer:Customer[] = (await fetchCustomer(item?.customer_id!)) as unknown as Customer[];
 
-        console.log(orderNumber)
-        const add = await getaddresses(addr)
-        const paymentsDetails = await getPaymentSummery(PaymentId)
-        const statusData = (await orderstatus(orderNumber)).reverse()
-        setAddress(add)
-        setPaymentSummery(paymentsDetails[0])
-        setstatus(statusData)
-        try {
+  const paymentSummery:Payment[] = (await fetchPayments(item?.payments_id!)) as unknown as Payment[];
 
-          const response = await fetch(`https://vareya-management-system.vercel.app/api/single-order-details?id=${Oid}`)
-          const lineItemsData =await response.json()
-          console.log(lineItemsData)
-          setlineItem(lineItemsData)
-        } catch (error : unknown){
-          console.log(error)
-        }
+  const status:ShipmentStatus = await fetchStatuses(item?.order_number!);
 
-      } 
-      
-    }
-   
-   
-    fetchDetails()
-
-
-  },[])
-
-  
-  console.log(paymentSummery)
-  if (!item) {
-    return (
-      <div className="flex items-center justify-center h-screen w-full">
-
-<div className='flex space-x-2 justify-center items-center bg-white h-screen dark:invert'>
- 	<span className='sr-only'>Loading...</span>
-  	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-	<div className='h-8 w-8 bg-black rounded-full animate-bounce'></div>
-</div>
-</div>
-    )
-  }
- 
+  const lineItems:LineItem = await fetchLineItems(item?.order_id as unknown as number);
 
   return (
     <div className="bg-white">
@@ -107,7 +85,7 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
             Discount Item
           </button>
           <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-3 hover:bg-gray-50">
-            Cancel
+            Cancel Order
           </button>
           {/* <button className="bg-white border border-gray-300 text-blue-500 py-1 px-3 mr-4 hover:bg-gray-50">
 
@@ -124,12 +102,14 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
             <h1 className="text-sm  text-gray-500">Shop Name</h1>
           </div>
           <div className="col-span-1">
-            <h1 className="text-sm  text-gray-500">Email</h1>
+            <h1 className="text-sm  text-gray-500">Shiphero Status</h1>
           </div>
           <div className="col-span-1">
             <h1 className="text-sm  text-gray-500">Customer</h1>
           </div>
-         
+          <div className="col-span-1">
+            <h1 className="text-sm  text-gray-500">Email</h1>
+          </div>
         </div>
         <div className="grid grid-cols-6 gap-4">
         <div className="col-span-1">
@@ -139,10 +119,13 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
             <p className=" font-semibold text-gray-700">{item.shop_name}</p>
           </div>
           <div className="col-span-1">
-            <p className=" font-semibold text-gray-700">{item.email}</p>
+            <p className=" font-semibold text-gray-700">{item.fulfillment_status}</p>
           </div>
           <div className="col-span-1">
-            <p className=" font-semibold text-blue-500 underline underline-offset-2"><Link href={""}>Customer Name</Link></p>
+            <p className=" font-semibold text-blue-500 underline underline-offset-2"><Link href={""}>{customer[0]?.firstName +' '+ customer[0]?.lastName}</Link></p>
+          </div>
+          <div className="col-span-1">
+            <p className=" font-semibold text-gray-700">{item.email}</p>
           </div>
          
          
@@ -252,22 +235,18 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
           <Table className="border rounded-lg">
                 <TableHeader>
                   <TableRow>
-                   
                     <TableHead>Address</TableHead>
                     <TableHead>City</TableHead>
                     <TableHead>State/Province</TableHead>
                     <TableHead>Zip</TableHead>
-                    
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                   
                     <TableCell>{address[0]?.address1}</TableCell>
                     <TableCell>{address[0]?.city}</TableCell>
                     <TableCell>{address[0]?.state}</TableCell>
                     <TableCell>{address[0]?.zip}</TableCell>
-                    
                   </TableRow>
                 </TableBody>
               </Table>
@@ -284,11 +263,11 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell>{paymentSummery?.card_type || "N/A"} </TableCell>
-                    <TableCell>${paymentSummery?.postauthed_amount}</TableCell>
-                    <TableCell>${paymentSummery?.authorized_amount}</TableCell>
-                    <TableCell>${paymentSummery?.refunded_amount}</TableCell>
-                    <TableCell>{paymentSummery?.date?.toLocaleString()}</TableCell>
+                    <TableCell>{paymentSummery[0]?.card_type || "N/A"} </TableCell>
+                    <TableCell>${paymentSummery[0]?.postauthed_amount}</TableCell>
+                    <TableCell>${paymentSummery[0]?.authorized_amount}</TableCell>
+                    <TableCell>${paymentSummery[0]?.refunded_amount}</TableCell>
+                    <TableCell>{paymentSummery[0]?.date?.toLocaleString()}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -344,3 +323,5 @@ export default  function OrderDetails({ params }: { params: { orderId: string } 
     </div>
   )
 }
+
+export default OrderDetails;
