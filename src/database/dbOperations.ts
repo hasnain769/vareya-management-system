@@ -188,19 +188,19 @@ export async function insertTote(data: any): Promise<void> {
                   }
                   console.log(paymentsData)
                   const paymentsResponse = await db.insert(payments).values(paymentsData).returning({id :payments.id})
-                 // logger.info(`payments deteails inserted with id  ${paymentsResponse[0].id}`)
-                  // const holdsData: HoldsType = {
-                  //     fraud_hold: ord.holds?.fraud_hold || false,
-                  //     payment_hold: ord.holds?.payment_hold || false,
-                  //     operator_hold: ord.holds?.operator_hold || false,
-                  //     address_hold: ord.holds?.address_hold || false,
-                  //     shipping_method_hold: ord.holds?.shipping_method_hold || false,
-                  //     client_hold: ord.holds?.client_hold || false
-                  // };
+                 logger.info(`payments deteails inserted with id  ${paymentsResponse[0].id}`)
+                  const holdsData: HoldsType = {
+                      fraud_hold: ord.holds?.fraud_hold || false,
+                      payment_hold: ord.holds?.payment_hold || false,
+                      operator_hold: ord.holds?.operator_hold || false,
+                      address_hold: ord.holds?.address_hold || false,
+                      shipping_method_hold: ord.holds?.shipping_method_hold || false,
+                      client_hold: ord.holds?.client_hold || false
+                  };
   
-                  // const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
-                  // console.log(holdsData)
-                  // console.log(holdsId)
+                  const holdsId = await db.insert(holds).values(holdsData).returning({id : holds.id})
+                 
+                  logger.info("holds info inserted with id :",holdsId)
   
                   const orderData: OrderType = {
                       order_id :ord?.id,
@@ -443,6 +443,20 @@ export async function getCustomer(id: any) {
   const data = await db.select().from(customers).where(eq(customers.id , id)).execute()
   console.log(data)
   return data
+}
+
+export async function getShippedStatus(id : string) {
+  const data = await db.select().from(order_packed_out).where(eq(order_packed_out.order_id,id)).execute()
+  console.log(data)
+  return data
+}
+export async function getPickStatus(data : any) {
+  console.log(data.id) // Access the "id" property within the object
+  const orderId = data.id; // Store the extracted ID in a variable
+
+  const results = await db.select().from(order_allocated).where(eq(order_allocated.order_id, orderId)).execute();
+  console.log(results);
+  return results;
 }
 
 export async function getLineItems(orderNumber: any ,id : any ,itt : number) {
