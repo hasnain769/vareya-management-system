@@ -1,4 +1,3 @@
-// "use client"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, Select } from "@/components/ui/select"
@@ -13,6 +12,7 @@ import { Address, LineItem, Order, ShipmentStatus, Payment, Customer } from "@/d
 //import { useRouter } from 'next/router';
 // import PathComponent from "./pathComponent"
 import { StatusIndicator } from "@/components/ui/status-indicator"
+import React from "react"
 
 const fetchSingleOrderDetails =async (id: number)=>{
   console.log("server component - fetchSingleOrderDetails:",id)
@@ -45,8 +45,15 @@ const fetchCustomer = async (customerId: number)=>{
   return customerData;
 }
 
-export default async function OrderDetails({ params }: { params: { orderId: string } }) {
-  const id = params.orderId;
+interface OrderDetailsProps {
+  params: {
+    orderId: string
+  };
+}
+
+const OrderDetails: React.FC<OrderDetailsProps> = async (orderDetailProps) => {
+// export default async function OrderDetails({ params }: { params: { orderId: string } }) {
+  const id = orderDetailProps.params.orderId;
   console.log("Opening detail page for ID:",id)
 
   const item:Order = await fetchSingleOrderDetails(id as unknown as number);
@@ -316,3 +323,5 @@ export default async function OrderDetails({ params }: { params: { orderId: stri
     </div>
   )
 }
+
+export default OrderDetails;

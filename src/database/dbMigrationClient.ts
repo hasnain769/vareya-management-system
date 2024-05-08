@@ -23,7 +23,7 @@ main();
 
 // Steps for DB migrations
 // 1. Create  a migration with pnpm drizzle-kit generate:pg
-// 2. Run the migrations with pnpm tsx ./dbMigrate.ts
+// 2. Run the migrations with pnpm tsx ./src/database/dbMigrationClient.ts
 
 // Steps to connect to DB from terminal
 // PGPASSWORD=ksdEp3uAx9Oe psql -h ep-weathered-forest-a509tbmy-pooler.us-east-2.aws.neon.tech -U syedhasnain769 -d vareya-oms

@@ -1,8 +1,6 @@
-import Image from "next/image";
-import { Dashboard } from "./screens/Dashboard";
+import Dashboard from "@/app/screens/Dashboard";
 export default function Home() {
   return(
     <Dashboard></Dashboard>
   )
- 
 }
