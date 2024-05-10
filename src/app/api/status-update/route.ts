@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { insertOrderAllocate, insertOrderPackedOut, insertTote } from "@/database/dbOperations";
-import { orderAllocatedType, orderPackedOutType } from "@/database/schema";
+import { NewOrderStatus, orderAllocatedType, orderPackedOutType, order_statuses } from "@/database/schema";
 export async function POST(req: NextRequest) {
     const body = await req.json();
   
     const {webhook_type} = body ;
     console.log("updating order status " , webhook_type);
+    
+
+
 
     if(await webhook_type =="Order Packed Out" ) {
 
@@ -19,8 +22,9 @@ export async function POST(req: NextRequest) {
                 order_number : order_number
                 
             }
-            console.log("first")
             await insertOrderPackedOut(data)
+            
+
             return new NextResponse("Success");
         } catch (error) {
             console.error("Error parsing request body:", error);

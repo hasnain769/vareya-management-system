@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) : Promise<any> {
         const endTime = currentTime.toISOString();
 
         // Construct the URL with query parameters
-        const postnlTrackingUrlprod = `https://api.postnl.nl/shipment/v2/status/${customernumber}/updatedshipments`;
+        const postnlTrackingUrlProd = `https://api.postnl.nl/shipment/v2/status/${"barcode"}`;
         
         // Construct the query parameters
         const queryParams = {
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) : Promise<any> {
         };
 
         // Fetch data from PostNL API with the API key included in the headers
-        const response = await axios.get(postnlTrackingUrlprod, {
+        const response = await axios.get(postnlTrackingUrlProd, {
             headers: {
                 'Accept': 'application/json',
                 'apikey': API_KEY

@@ -20,7 +20,9 @@ import {
     payments,
     customers,
     NewCustomer,
-    Customer
+    Customer,
+    NewOrderStatus,
+    order_statuses
 } from '@/database/schema';
 
 export async function orderstatus(id : any): Promise<any> {
@@ -50,6 +52,14 @@ export async function insertOrderAllocate(data: orderAllocatedType): Promise<voi
   try {
     
     await db.insert(order_allocated).values(data).execute()
+    const statusData : NewOrderStatus= {
+      order_number : data.order_number,
+      status_name : "Shipped",
+      status_date_time : new Date(new Date().toISOString()) ,
+      status_source : "Shiphero",
+    }
+
+    await db.insert(order_statuses).values(statusData)
 
     //logger.info("added order allocated status :");
 
@@ -60,6 +70,12 @@ export async function insertOrderAllocate(data: orderAllocatedType): Promise<voi
       //logger.error("An error occurred while inserting a new shipment into the database:", { errors: error.message });
     }
   }
+}
+
+export async function getOrderById(orderId: any) {
+  const result = await db.select().from(order).where(eq(order.order_id, orderId))
+  return result
+
 }
 
 export async function insertTote(data: any): Promise<void> {
@@ -83,6 +99,14 @@ export async function insertTote(data: any): Promise<void> {
     console.log("first")
     try {
       await db.insert(order_packed_out).values(data).execute()
+      const statusData : NewOrderStatus= {
+        order_number : data.order_number as any,
+        status_name : "Packed",
+        status_date_time : new Date(new Date().toISOString()) ,
+        status_source : "Shiphero",
+      }
+
+      await db.insert(order_statuses).values(statusData)
   
       //logger.info("added order allocated status :");
   
@@ -225,7 +249,15 @@ export async function insertTote(data: any): Promise<void> {
   
                   const orderInsertionResponse = await db.insert(order).values(orderData).returning({ id: order.id });
                   logger.info(`order inserted with orderId: ${orderInsertionResponse[0].id}`)
-  
+                  
+                  const statusData : NewOrderStatus= {
+                    order_number : ord.order_number,
+                    status_name : "New",
+                    status_date_time : new Date(ord.order_date!),
+                    status_source : "Shiphero",
+                  }
+
+                  await db.insert(order_statuses).values(statusData)
   
   
   
@@ -450,11 +482,11 @@ export async function getShippedStatus(id : string) {
   console.log(data)
   return data
 }
-export async function getPickStatus(data : any) {
-  console.log(data.id) // Access the "id" property within the object
-  const orderId = data.id; // Store the extracted ID in a variable
+export async function getPickStatus(orderNumber : any) {
+  console.log(orderNumber) // Access the "id" property within the object
+; // Store the extracted ID in a variable
 
-  const results = await db.select().from(order_allocated).where(eq(order_allocated.order_id, orderId)).execute();
+  const results = await db.select().from(order_allocated).where(eq(order_allocated.order_number, orderNumber)).execute();
   console.log(results);
   return results;
 }

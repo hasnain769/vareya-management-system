@@ -1,6 +1,6 @@
 {
-  "id": "1d1fc300-2ab9-4c63-ab02-dbc46fcfadc4",
-  "prevId": "70603e54-272f-40c4-8e79-fc9ed650effc",
+  "id": "81f6631c-8895-4573-b783-4b59a01e133b",
+  "prevId": "7b7b4f8d-3f3f-4892-8da3-bbef096799e4",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -52,6 +52,46 @@
         },
         "dummy": {
           "name": "dummy",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "customer": {
+      "name": "customer",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -262,6 +302,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "payments_id": {
+          "name": "payments_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "shipping_address_id": {
           "name": "shipping_address_id",
           "type": "integer",
@@ -270,6 +316,12 @@
         },
         "billing_address_id": {
           "name": "billing_address_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer_id": {
+          "name": "customer_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -283,6 +335,19 @@
           "tableTo": "holds",
           "columnsFrom": [
             "holds_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "order_payments_id_payments_id_fk": {
+          "name": "order_payments_id_payments_id_fk",
+          "tableFrom": "order",
+          "tableTo": "payments",
+          "columnsFrom": [
+            "payments_id"
           ],
           "columnsTo": [
             "id"
@@ -315,10 +380,31 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "order_customer_id_customer_id_fk": {
+          "name": "order_customer_id_customer_id_fk",
+          "tableFrom": "order",
+          "tableTo": "customer",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "order_order_number_unique": {
+          "name": "order_order_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "order_number"
+          ]
+        }
+      }
     },
     "order_allocated": {
       "name": "order_allocated",
@@ -357,6 +443,60 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "order_life_cycle_statuses": {
+      "name": "order_life_cycle_statuses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order_number": {
+          "name": "order_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_name": {
+          "name": "status_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_date_time": {
+          "name": "status_date_time",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_source": {
+          "name": "status_source",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "order_life_cycle_statuses_order_number_order_order_number_fk": {
+          "name": "order_life_cycle_statuses_order_number_order_order_number_fk",
+          "tableFrom": "order_life_cycle_statuses",
+          "tableTo": "order",
+          "columnsFrom": [
+            "order_number"
+          ],
+          "columnsTo": [
+            "order_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -444,6 +584,58 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "card_type": {
+          "name": "card_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postauthed_amount": {
+          "name": "postauthed_amount",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "authorized_amount": {
+          "name": "authorized_amount",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refunded_amount": {
+          "name": "refunded_amount",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

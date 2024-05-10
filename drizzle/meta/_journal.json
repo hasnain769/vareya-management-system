@@ -29,6 +29,20 @@
       "when": 1715140232378,
       "tag": "0003_smooth_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1715338080502,
+      "tag": "0005_typical_the_initiative",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1715339305559,
+      "tag": "0006_odd_ultimatum",
+      "breakpoints": true
     }
   ]
 }

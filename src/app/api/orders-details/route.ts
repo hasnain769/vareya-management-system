@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   console.log("order fetching start")
   try {
     // Define the refresh token
-    const refreshToken = "YFVyGZuMHaPoN1EtPDN5xhJ4slIuEG_bRVhbDqArSPw36";
+    const refreshToken = process.env.SHIPHERO_REFRESH_TOKEN
 
     // Make a POST request to refresh endpoint to get the access token
     const refreshResponse = await fetch("https://public-api.shiphero.com/auth/refresh", {

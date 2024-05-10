@@ -60,6 +60,15 @@ export const shipment = pgTable('shipment', {
     status : varchar('status'),
 });
 
+export const order_statuses = pgTable('order_statuses',{
+    id: serial("id").primaryKey(),
+    order_number: varchar('order_number').references(() => order.order_number),
+    status_name : varchar('status_name'),
+    status_date_time : timestamp('status_date_time'),
+    status_source : varchar('status_source'),
+    
+})
+
 export const holds = pgTable('holds', {
     id: serial("id").primaryKey(),
     fraud_hold: boolean('fraud_hold'),
@@ -89,7 +98,7 @@ export const order = pgTable('order', {
     account_id: varchar('account_id'),
     profile: varchar('profile'),
     email: varchar('email'),
-    order_number: varchar('order_number'),
+    order_number: varchar('order_number').unique(),
     fulfillment_status: varchar('fulfillment_status'),
     order_date: timestamp('order_date'),
     total_tax: decimal('total_tax'),
@@ -116,6 +125,7 @@ export type ShipmentType = typeof shipment.$inferInsert;
 export type PaymentType = typeof payments.$inferInsert;
 
 export type NewCustomer = typeof customers.$inferInsert;
+export type NewOrderStatus = typeof order_statuses.$inferInsert;
 
 export type Order = typeof order.$inferSelect;
 export type Address = typeof address.$inferSelect;
@@ -123,3 +133,4 @@ export type LineItem = typeof lineItem.$inferSelect;
 export type ShipmentStatus = typeof shipment.$inferSelect;
 export type Payment = typeof payments.$inferSelect;
 export type Customer = typeof customers.$inferSelect;
+export type OrderStatus = typeof order_statuses.$inferSelect;

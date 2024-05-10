@@ -1,8 +1,8 @@
 import { getShippedStatus ,getPickStatus } from "@/database/dbOperations"
 
 
-async function getStatuses(id : any){
-  const pick = await getPickStatus(id as number)
+async function getStatuses(id : any ,orderNumber : any){
+  const pick = await getPickStatus(orderNumber as number)
   const ship = await getShippedStatus(id as string)
   console.log(ship)
   return {pick ,ship}
@@ -13,16 +13,17 @@ async function getStatuses(id : any){
 interface StatusIndicatorProps {
   id: string;
   cancel: string;
+  orderNumber : any ;
 }
 
-export const StatusIndicator: React.FC<StatusIndicatorProps> = async  ({ id, cancel }) => {
-  console.log(id)
+export const StatusIndicator: React.FC<StatusIndicatorProps> = async  ({ id, cancel ,orderNumber}) => {
+  console.log(id , cancel ,orderNumber)
 
-  const {pick , ship } = await getStatuses(id)
-  console.log(ship)
+  const {pick , ship , } = await getStatuses(id,orderNumber)
   console.log(pick)
+  console.log(ship)
     return (
-      <div className="flex items-center justify-center w-full gap-4 px-4 py-2 mt-1">
+      <div className="flex w-full gap-4 px-4 py-2 mt-1">
         <div className="relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] bg-green-500 text-sm font-medium text-white">
           <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-green-500" />
           <div className="flex items-center justify-center h-full">
@@ -43,7 +44,8 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = async  ({ id, can
         </div>) : (
           <>
           
-          <div className={`relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] ${pick.length > 0 ||ship.length > 0 && "bg-green-500 text-white"} bg-gray-200 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400`}>
+          <div className={`relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] ${pick.length > 0 || ship.length > 0 ? "bg-green-500 text-white" : "bg-gray-200 text-gary-500"}`}>
+
           <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-gray-200 dark:border-r-gray-700" />
           <div className="flex items-center justify-center h-full">
             <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-gray-200 dark:border-r-gray-700" />
