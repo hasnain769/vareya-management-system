@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 import { updateStatus } from '@/database/dbOperations';
 
 config();
-export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) : Promise<any> {
     const API_KEY = process.env.POSTNL_API_KEY;
     const  customernumber = process.env.CUSTOMER_NUMBER // Extracting customer number from path parameter

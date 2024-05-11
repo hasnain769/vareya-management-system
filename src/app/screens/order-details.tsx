@@ -29,8 +29,8 @@ const fetchPayments =async (paymentSummaryId: number)=>{
   const paymentData = await getPaymentSummery(paymentSummaryId)
   return paymentData;
 }  
-const fetchStatuses =async (orderNumber: string)=>{
-  const statusData = (await orderstatus(orderNumber)).reverse()
+const fetchStatuses =async (order_id: string)=>{
+  const statusData = (await orderstatus(order_id)).reverse()
   return statusData;
 }  
 const fetchLineItems =async (orderId: number)=>{
@@ -64,7 +64,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = async (orderDetailProps) => {
 
   const paymentSummery:Payment[] = (await fetchPayments(item?.payments_id!)) as unknown as Payment[];
 
-  const status:ShipmentStatus = await fetchStatuses(item?.order_number!);
+  const status:ShipmentStatus = await fetchStatuses(item?.legacy_id! as any);
 
   const lineItems:LineItem = await fetchLineItems(item?.order_id as unknown as number);
 

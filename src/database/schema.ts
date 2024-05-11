@@ -46,14 +46,14 @@ export const customers = pgTable('customer', {
 
 export const lineItem = pgTable('line_item', {
     id: serial("id").primaryKey(),
-    order_number: varchar('order_number').references(() => order.order_number, { onDelete: 'cascade' }),
+    order_id: integer('order_id').references(() => order.legacy_id),
     product_name: varchar('product_name'),
     quantity: integer('quantity'),
     price: decimal('price')
 });
 export const shipment = pgTable('shipment', {
     id: serial("id").primaryKey(),
-    order_number: varchar('order_number').references(() => order.order_number, { onDelete: 'cascade' }),
+    order_id: integer('order_id').references(() => order.legacy_id),
     tracking_number: varchar('tracking_number'),
     shipping_carrier: varchar('shipping_carrier'),
     shipping_method: varchar('shipping_method') ,
@@ -62,7 +62,7 @@ export const shipment = pgTable('shipment', {
 
 export const order_statuses = pgTable('order_statuses',{
     id: serial("id").primaryKey(),
-    order_number: varchar('order_number').references(() => order.order_number),
+    order_id: integer('order_id').references(() => order.legacy_id),
     status_name : varchar('status_name'),
     status_date_time : timestamp('status_date_time'),
     status_source : varchar('status_source'),
@@ -93,7 +93,7 @@ export const payments = pgTable('payments', {
 export const order = pgTable('order', { 
     id: serial("id").primaryKey(),
     order_id : varchar("order_id"),
-    legacy_id: integer('legacy_id'),
+    legacy_id: integer('legacy_id').unique(),
     shop_name: varchar('shop_name'),
     account_id: varchar('account_id'),
     profile: varchar('profile'),

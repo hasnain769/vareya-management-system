@@ -29,7 +29,7 @@ export async function orderstatus(id : any): Promise<any> {
   console.log(id)
   try {
     // Assume db.select().from() is an async operation and await its result.
-    const response = await db.select().from(shipment).where(eq(shipment.order_number, id)).execute();
+    const response = await db.select().from(shipment).where(eq(shipment.order_id, id)).execute();
 
     console.log(response)
 
@@ -53,7 +53,7 @@ export async function insertOrderAllocate(data: orderAllocatedType): Promise<voi
     
     await db.insert(order_allocated).values(data).execute()
     const statusData : NewOrderStatus= {
-      order_number : data.order_number,
+      // order_number : data.order_number,
       status_name : "Shipped",
       status_date_time : new Date(new Date().toISOString()) ,
       status_source : "Shiphero",
@@ -100,7 +100,7 @@ export async function insertTote(data: any): Promise<void> {
     try {
       await db.insert(order_packed_out).values(data).execute()
       const statusData : NewOrderStatus= {
-        order_number : data.order_number as any,
+        // order_number : data.order_number as any,
         status_name : "Packed",
         status_date_time : new Date(new Date().toISOString()) ,
         status_source : "Shiphero",
@@ -251,7 +251,7 @@ export async function insertTote(data: any): Promise<void> {
                   logger.info(`order inserted with orderId: ${orderInsertionResponse[0].id}`)
                   
                   const statusData : NewOrderStatus= {
-                    order_number : ord.order_number,
+                    order_id : ord?.legacy_id,
                     status_name : "New",
                     status_date_time : new Date(ord.order_date!),
                     status_source : "Shiphero",
@@ -276,6 +276,14 @@ export async function insertTote(data: any): Promise<void> {
 
                 logger.info("all orders Response" ,ordersResponse)
                 return ordersResponse
+}
+
+export async function insertStatus(data : NewOrderStatus) {
+  console.log(data)
+  const response = await db.insert(order_statuses).values(data)
+  console.log(response)
+  logger.info("status info inserted")
+
 }
 
 // export async function insertCompleteOrder(ordersData: any): Promise<void> {
@@ -449,6 +457,13 @@ export async function getSingleOrder(id : any) {
   return data
 
 }
+export async function getSingleOrderbyOrderNumber(orderNumber : any) {
+  console.log("database call - getSingleOrder:",orderNumber)
+  const data = await db.select().from(order).where(eq(order.order_number,orderNumber))
+  console.log("database data - getSingleOrder:",data)
+  return data
+
+}
 
 export async function getaddresses(id: any) {
   console.log(id)
@@ -491,17 +506,17 @@ export async function getPickStatus(orderNumber : any) {
   return results;
 }
 
-export async function getLineItems(orderNumber: any ,id : any ,itt : number) {
-  console.log(id);
+export async function getLineItems(orderId: any ) {
+  console.log(orderId);
   
   try {
     const data = await db
       .select()
       .from(lineItem)
-      .where(eq(lineItem.order_number, orderNumber))
+      .where(eq(lineItem.order_id, orderId))
     if(data.length < 1){
    
-        const response = await fetch(`http://localhost:3000/api/single-order-details?id=${id}`)
+        const response = await fetch(`http://localhost:3000/api/single-order-details?id=${orderId}`)
         
         
     }  
