@@ -7,10 +7,6 @@ import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@
 import {  getLineItems, getPaymentSummery, getSingleOrder, getaddresses, orderstatus, getCustomer } from "@/database/dbOperations"
 // import { useEffect, useState } from "react"
 import { Address, LineItem, Order, ShipmentStatus, Payment, Customer } from "@/database/schema"
-// import { useStore } from "@/store"
-// import { useSearchParams , useRouter} from "next/navigation"
-//import { useRouter } from 'next/router';
-// import PathComponent from "./pathComponent"
 import { StatusIndicator } from "@/components/ui/status-indicator"
 import React from "react"
 
