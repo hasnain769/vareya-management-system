@@ -22,7 +22,7 @@ async function getListOrders() {
      return []
 
   }
-s
+
 }
 
 interface DashboardProps {
