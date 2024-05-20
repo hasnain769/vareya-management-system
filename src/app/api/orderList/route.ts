@@ -3,6 +3,8 @@ import db from '@/database/dbClient';
 import { Order, order } from '@/database/schema';
 import { desc } from 'drizzle-orm';
 
+export const maxDuration = 30; // This function can run for a maximum of 5 seconds
+export const dynamic = 'force-dynamic';
 
 // GET
 export async function GET(request: NextRequest) {

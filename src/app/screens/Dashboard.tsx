@@ -10,11 +10,11 @@ import { getOrders } from "@/database/dbOperations";
 
 async function getListOrders() {
   try {
-    // const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
-    // const data = await response.json(); 
-    // return data.allOrders as Order[];
-    const data = await getOrders()
-    return data as []
+    const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
+    const data = await response.json(); 
+    return data.allOrders as Order[];
+    // const data = await getOrders()
+    // return data as []
   } catch (err) {
      return []
 
