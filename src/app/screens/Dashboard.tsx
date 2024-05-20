@@ -5,14 +5,16 @@ import { Order } from "@/database/schema";
 import Link from "next/link";
 
 import React from "react"
+import { getOrders } from "@/database/dbOperations";
 
 
 async function getListOrders() {
   try {
-    const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
-    const data = await response.json(); 
-    return data.allOrders as Order[];
-    
+    // const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
+    // const data = await response.json(); 
+    // return data.allOrders as Order[];
+    const data = await getOrders()
+    return data as []
   } catch (err) {
      return []
 
@@ -27,7 +29,7 @@ export default async function Dashboard() {
   const order=await getListOrders(); // Data fetching on the server
   console.log(order);
 
-  if (order.length > 0) {
+  if (order.length <= 0) {
       return (
         <div>
           <h1>no data </h1>
