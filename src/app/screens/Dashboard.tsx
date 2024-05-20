@@ -26,6 +26,14 @@ interface DashboardProps {
 export default async function Dashboard() {
   const order=await getListOrders(); // Data fetching on the server
   console.log(order);
+
+  if (order.length > 0) {
+      return (
+        <div>
+          <h1>no data </h1>
+        </div>
+      )
+  }
   return (
       <>
         <div className="bg-white dark:bg-gray-900">
