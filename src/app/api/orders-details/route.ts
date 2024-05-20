@@ -123,6 +123,7 @@ export async function POST(req: NextRequest) {
     logger.info(`Orders get from shiphero on ${ordersToDate.toISOString()}` ,ordersData)
     try {
       const result = await insertCompleteOrder(ordersData)
+      console.log(result)
       logger.info(result)
       return NextResponse.json(result);
     }
