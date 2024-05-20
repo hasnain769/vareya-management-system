@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/your-function.js": {
+      "api/orderList/route,ts": {
         "maxDuration": 45
       }
     }
