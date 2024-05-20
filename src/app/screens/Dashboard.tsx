@@ -4,40 +4,50 @@ import { Button } from "@/components/ui/button";
 import { Order } from "@/database/schema";
 import Link from "next/link";
 
-import React from "react"
-import { getOrders } from "@/database/dbOperations";
 
-
-export const maxDuration = 45; 
+export const maxDuration = 45;
 export const dynamic = 'force-dynamic';
 
 async function getListOrders() {
   try {
-    const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
-    const data = await response.json(); 
+    const apiUrl = process.env.API_URL_ORDERS;
+    if (!apiUrl) {
+      console.error("API_URL_ORDERS environment variable is not set");
+      return [];
+    }
+
+    console.log(`Fetching orders from: ${apiUrl}`);
+    const startTime = Date.now();
+
+    const response = await fetch(apiUrl, { cache: "no-store" });
+    if (!response.ok) {
+      console.error(`Error fetching orders: ${response.statusText}`);
+      return [];
+    }
+
+    const data = await response.json();
+    const responseTime = Date.now() - startTime;
+    console.log(`Fetched orders in ${responseTime}ms`);
+
     return data.allOrders as Order[];
-    // const data = await getOrders()
-    // return data as []
   } catch (err) {
-     return []
-
+    console.error("Error in getListOrders:", err);
+    return [];
   }
-
 }
 
-interface DashboardProps {
-};
+interface DashboardProps {}
 
 export default async function Dashboard() {
-  const order=await getListOrders(); // Data fetching on the server
-  console.log(order);
+  const orders = await getListOrders(); // Data fetching on the server
+  console.log(orders);
 
-  if (order.length == 0) {
-      return (
-        <div>
-          <h1>no data </h1>
-        </div>
-      )
+  if (orders.length === 0) {
+    return (
+      <div>
+        <h1>No data</h1>
+      </div>
+    );
   }
   return (
       <>
@@ -64,7 +74,7 @@ export default async function Dashboard() {
               <TableBody>
               {
                 
-                Array.isArray(order) && order.map((item : Order ,i)=>(
+                Array.isArray(orders) && orders.map((item : Order ,i)=>(
                   <TableRow key={item.id} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
                   <TableCell className="font-medium">{i+1}</TableCell>
                   <TableCell className="font-medium text-blue-500 underline-offset-2"><Link href={"/orders/" + item.id}>{item.order_number}</Link></TableCell>
