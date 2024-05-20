@@ -8,8 +8,10 @@ import React from "react"
 
 
 async function getListOrders() {
-  const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-cache"});
-  
+  const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
+  if (!response.ok) {
+      throw new Error('Network response was not ok');
+  }
   const data = await response.json(); 
   return data.allOrders as Order[];
 }
