@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(result);
     }
     catch (error) {
+      console.log(error)
       return NextResponse.json(error);
       //logger.error(error)
     }
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
     // return NextResponse.json(ordersData);
   } catch (error : any) {
     // If an error occurs during the process, return an error response
-    console.log("Error:", error.Error.message);
+    // console.log("Error:", error.Error.message);
     return error
   }
 }
