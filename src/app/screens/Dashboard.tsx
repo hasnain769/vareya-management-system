@@ -8,6 +8,9 @@ import React from "react"
 import { getOrders } from "@/database/dbOperations";
 
 
+export const maxDuration = 45; 
+export const dynamic = 'force-dynamic';
+
 async function getListOrders() {
   try {
     const response = await fetch(process.env.API_URL_ORDERS!,{cache:"no-store"});
@@ -19,7 +22,7 @@ async function getListOrders() {
      return []
 
   }
-
+s
 }
 
 interface DashboardProps {
