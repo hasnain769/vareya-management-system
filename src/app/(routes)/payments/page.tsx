@@ -27,51 +27,44 @@ function calculateTotalAmounts(transactions: PaymentType[]) {
   };
 }
 
-export default  function Component() {
-  // Fetch payments data from the database
-
-  const [payments ,setpayments] = useState<any| []>([])
+export default function Component() {
+  const [payments, setPayments] = useState<PaymentType[]>([]);
   const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 50
-  const [currentItems , setCurrentItems] = useState([]);
+  const itemsPerPage = 50;
+  const [currentItems, setCurrentItems] = useState<PaymentType[]>([]);
   const [pageCount, setPageCount] = useState(0);
-  
-  
-  useEffect( ()=> {
+
+  useEffect(() => {
     const getPayments = async () => {
       const paymentsData = await getAllPaymentsData();
-      setpayments(paymentsData)
+      setPayments(paymentsData);
+    };
+    getPayments();
+  }, []);
 
-    }
-   getPayments()
-    const endOffSet = itemOffset + itemsPerPage
-    setCurrentItems(payments.slice(itemOffset,endOffSet));
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(payments.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(payments.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, payments]);
 
-  },[itemOffset,itemsPerPage ,payments])
-
-  const handlePageClick = (event : any) => {
+  const handlePageClick = (event: any) => {
     const newOffset = (event.selected * itemsPerPage) % payments.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 
-  console.log(payments)
-  const totalPayments = calculateTotalAmounts(payments)
+  const totalPayments = calculateTotalAmounts(payments);
 
   return (
-    
-    <div className="overflow-hidden rounded-lg  border-gray-200 dark:border-gray-800 px-3 border-s-violet-100 border-4">
-      <h1 className="  text-3xl font-extrabold p-5" >Payments summeries</h1>
+    <div className="overflow-hidden rounded-lg border-gray-200 dark:border-gray-800 px-3 border-s-violet-100 border-4">
+      <h1 className="text-3xl font-extrabold p-5">Payments Summaries</h1>
       <div className="grid md:grid-cols-3 gap-4 p-2">
         <Card className="bg-green-300">
           <CardHeader>
             <CardTitle>Total Authorized Amount</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">${totalPayments.totalAuthorizedAmount}</div>
+            <div className="text-4xl font-bold">${totalPayments.totalAuthorizedAmount.toFixed(2)}</div>
           </CardContent>
         </Card>
         <Card className="bg-yellow-300">
@@ -81,13 +74,13 @@ export default  function Component() {
           <CardContent>
             <div className="text-4xl font-bold">${totalPayments.totalPostauthAmount.toFixed(2)}</div>
           </CardContent>
-        </Card >
+        </Card>
         <Card className="bg-red-300">
           <CardHeader>
             <CardTitle>Total Refunded Amount</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">${totalPayments.totalRefundedAmount}</div>
+            <div className="text-4xl font-bold">${totalPayments.totalRefundedAmount.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>
@@ -111,8 +104,7 @@ export default  function Component() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-            {/* Map over payments array and render a row for each payment */}
-            {payments.map((payment : PaymentType) => (
+            {currentItems.map((payment: PaymentType) => (
               <tr key={payment.transaction_id}>
                 <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-50">{payment.id}</td>
                 <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">${payment.authorized_amount}</td>
@@ -124,9 +116,7 @@ export default  function Component() {
           </tbody>
         </table>
       </div>
-      <>
-      
-      <ReactPaginate 
+      <ReactPaginate
         breakLabel="..."
         nextLabel="next >"
         onPageChange={handlePageClick}
@@ -139,9 +129,7 @@ export default  function Component() {
         previousLinkClassName="page-num"
         nextLinkClassName="page-num"
         activeLinkClassName="active"
-/>
-</>
+      />
     </div>
-    
   );
 }
