@@ -257,7 +257,8 @@ export async function insertTote(data: any): Promise<void> {
                     status_source : "Shiphero",
                   }
 
-                  await db.insert(order_statuses).values(statusData)
+                  // const status = await db.insert(order_statuses).values(statusData)
+                  // console.log(status)
   
   
   

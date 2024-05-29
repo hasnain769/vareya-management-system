@@ -1,46 +1,47 @@
+"use client"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-
-import { Order } from "@/database/schema";
+import { Order, order } from "@/database/schema";
 import Link from "next/link";
+import ReactPaginate from 'react-paginate';
+import { useEffect, useState } from "react";
 
 
-export const maxDuration = 45;
-export const dynamic = 'force-dynamic';
-
-async function getListOrders() {
-  try {
-    const apiUrl = process.env.API_URL_ORDERS;
-    if (!apiUrl) {
-      console.error("API_URL_ORDERS environment variable is not set");
-      return [];
-    }
-
-    console.log(`Fetching orders from: ${apiUrl}`);
-    const startTime = Date.now();
-
-    const response = await fetch(apiUrl, { cache: "no-store" });
-    if (!response.ok) {
-      console.error(`Error fetching orders: ${response.statusText}`);
-      return [];
-    }
-
-    const data = await response.json();
-    const responseTime = Date.now() - startTime;
-    console.log(`Fetched orders in ${responseTime}ms`);
-
-    return data.allOrders as Order[];
-  } catch (err) {
-    console.error("Error in getListOrders:", err);
-    return [];
-  }
-}
 
 interface DashboardProps {}
 
-export default async function Dashboard() {
-  const orders = await getListOrders(); // Data fetching on the server
-  console.log(orders);
+export default  function Dashboard(props : any) {
+
+  const {orders} = props
+  console.log(orders)
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 50
+  const [currentItems , setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  
+
+  useEffect(()=>{
+    const endOffSet = itemOffset + itemsPerPage
+    setCurrentItems(orders.slice(itemOffset,endOffSet));
+    setPageCount(Math.ceil(orders.length / itemsPerPage));
+
+  },[itemOffset,itemsPerPage ,orders])
+
+
+  // const endOffset = itemOffset + itemsPerPage;
+  // console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  // const currentItems = orders.slice(itemOffset, endOffset);
+  // const pageCount = Math.ceil(orders.length / itemsPerPage);
+
+
+  const handlePageClick = (event : any) => {
+    const newOffset = (event.selected * itemsPerPage) % orders.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
 
   if (orders.length === 0) {
     return (
@@ -50,7 +51,9 @@ export default async function Dashboard() {
     );
   }
   return (
+
       <>
+     
         <div className="bg-white dark:bg-gray-900">
           <div className="flex flex-col">
             <div className="flex items-center justify-between px-6 py-2">
@@ -73,9 +76,10 @@ export default async function Dashboard() {
               </TableHeader>
               <TableBody>
               {
+           
                 
-                Array.isArray(orders) && orders.map((item : Order ,i)=>(
-                  <TableRow key={item.id} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+                Array.isArray(currentItems) && currentItems.map((item : Order ,i )=>(
+                  <TableRow key={i} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
                   <TableCell className="font-medium">{i+1}</TableCell>
                   <TableCell className="font-medium text-blue-500 underline-offset-2"><Link href={"/orders/" + item.id}>{item.order_number}</Link></TableCell>
                   <TableCell>{item.shop_name}</TableCell>
@@ -90,17 +94,26 @@ export default async function Dashboard() {
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex space-x-4">
-              {/* <HistoryIcon className="text-gray-600 dark:text-gray-300" /> */}
-              <StickyNoteIcon className="text-gray-600 dark:text-gray-300" />
-              <LogInIcon className="text-gray-600 dark:text-gray-300" />
-              <InfoIcon className="text-gray-600 dark:text-gray-300" />
-            </div>
-            <div className="flex space-x-2">
-              <Button>Previous</Button>
-              <Button>Next</Button>
-            </div>
+          <div className="pt-5">
+            
+            <>
+      
+            <ReactPaginate 
+              breakLabel="..."
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              pageCount={pageCount}
+              previousLabel="< previous"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination"
+              pageLinkClassName="page-num"
+              previousLinkClassName="page-num"
+              nextLinkClassName="page-num"
+              activeLinkClassName="active"
+      />
+    </>
+            
           </div>
         </div>
       </div>
