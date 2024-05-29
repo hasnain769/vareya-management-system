@@ -1,6 +1,9 @@
+"use client"
 import { getAllPaymentsData } from "@/database/dbOperations";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { PaymentType } from "@/database/schema";
+import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 
 
 export const dynamic = 'force-dynamic'
@@ -24,10 +27,36 @@ function calculateTotalAmounts(transactions: PaymentType[]) {
   };
 }
 
-export default async function Component() {
+export default  function Component() {
   // Fetch payments data from the database
-  let payments : any = ""
-   payments = await getAllPaymentsData();
+
+  const [payments ,setpayments] = useState<any| []>([])
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 50
+  const [currentItems , setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  
+  
+  useEffect( ()=> {
+    const getPayments = async () => {
+      const paymentsData = await getAllPaymentsData();
+      setpayments(paymentsData)
+
+    }
+   getPayments()
+    const endOffSet = itemOffset + itemsPerPage
+    setCurrentItems(payments.slice(itemOffset,endOffSet));
+    setPageCount(Math.ceil(payments.length / itemsPerPage));
+
+  },[itemOffset,itemsPerPage ,payments])
+
+  const handlePageClick = (event : any) => {
+    const newOffset = (event.selected * itemsPerPage) % payments.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
 
   console.log(payments)
   const totalPayments = calculateTotalAmounts(payments)
@@ -95,6 +124,24 @@ export default async function Component() {
           </tbody>
         </table>
       </div>
+      <>
+      
+      <ReactPaginate 
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        pageCount={pageCount}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null}
+        containerClassName="pagination"
+        pageLinkClassName="page-num"
+        previousLinkClassName="page-num"
+        nextLinkClassName="page-num"
+        activeLinkClassName="active"
+/>
+</>
     </div>
+    
   );
 }
