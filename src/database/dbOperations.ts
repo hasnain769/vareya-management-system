@@ -257,20 +257,14 @@ export async function insertTote(data: any): Promise<void> {
                     status_source : "Shiphero",
                   }
 
-                  // const status = await db.insert(order_statuses).values(statusData)
-                  // console.log(status)
+                  const status = await db.insert(order_statuses).values(statusData)
+                  console.log(status)
   
   
   
                   
                   console.log(`Order with order number ${ord.order_number} inserted successfully.`);
-                  // } catch (error: unknown) {
-                  //     console.log(error)
-                  // }
-                  // } catch (error) {
-                    //     console.error('Error inserting complete order data:', error);
-                    //     throw error;
-                    // }
+               
                     return `inserted order ${ord.order_number}  with orderid ${orderInsertionResponse[0].id}`
                   }
                 }));

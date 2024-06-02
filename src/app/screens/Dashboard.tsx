@@ -18,6 +18,7 @@ export default  function Dashboard(props : any) {
   const itemsPerPage = 50
   const [currentItems , setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
+  const [index , setIndex] = useState<number>(0)
   
 
   useEffect(()=>{
@@ -40,6 +41,10 @@ export default  function Dashboard(props : any) {
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );
     setItemOffset(newOffset);
+    if(newOffset != 0){
+
+      setIndex(newOffset-50)
+    }
   };
 
 
@@ -79,8 +84,8 @@ export default  function Dashboard(props : any) {
            
                 
                 Array.isArray(currentItems) && currentItems.map((item : Order ,i )=>(
-                  <TableRow key={i} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-                  <TableCell className="font-medium">{i+1}</TableCell>
+                  <TableRow key={item.id} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+                  <TableCell className="font-medium">{index+i}</TableCell>
                   <TableCell className="font-medium text-blue-500 underline-offset-2"><Link href={"/orders/" + item.id}>{item.order_number}</Link></TableCell>
                   <TableCell>{item.shop_name}</TableCell>
                   <TableCell>{item.fulfillment_status}</TableCell> 
@@ -89,6 +94,7 @@ export default  function Dashboard(props : any) {
 
                 </TableRow>
                 
+              
                 ))
               }
               </TableBody>

@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
     }
     catch (error) {
       console.log(error)
-      return NextResponse.json(error);
+      return NextResponse.json(error);     
       //logger.error(error)
     }
     
@@ -140,8 +140,7 @@ export async function POST(req: NextRequest) {
     return error
   }
 }
+    
+// export const fetchCache = 'force-no-store'
 
-export const fetchCache = 'force-no-store'
-// 'auto' | 'default-cache' | 'only-cache'
-// 'force-cache' | 'force-no-store' | 'default-no-store' | 'only-no-store'
 
