@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const accessToken = refreshData.access_token;
     logger.info("access token :",accessToken);
     const currentTime = new Date();
-    const ordersFromDate = new Date(currentTime.getTime() - 170 * 60000); // Subtract 15 minutes from current time
+    const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
     logger.info("orders from date :", ordersFromDate.toISOString(),"to date :", ordersToDate.toISOString());
     console.log(accessToken)
@@ -43,8 +43,9 @@ export async function POST(req: NextRequest) {
     console.log(ordersToDate.toISOString())
     let isNextPageAvailable =  false;
     let nextPageCursor = "" 
-    let orderInsertionResponse  = []
-    do {
+
+    // Define the GraphQL query with dynamic dates
+    // do {
 
         const graphqlQuery = `{
           orders(order_date_from: "${ordersFromDate.toISOString()}",
@@ -107,13 +108,12 @@ export async function POST(req: NextRequest) {
               }
           }
       }`;
-      console.log(graphqlQuery)
     
         // Make a POST request to the GraphQL API endpoint with the access token in the header
-        const graphqlResponse : any = await fetch("https://public-api.shiphero.com/graphql", {
+        const graphqlResponse = await fetch("https://public-api.shiphero.com/graphql", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}` // Set the Authorization header with the access token
           },
           body: JSON.stringify({ query: graphqlQuery })
@@ -125,33 +125,27 @@ export async function POST(req: NextRequest) {
         }
     
         // Extract the GraphQL response data
-        const graphqlData  : any= await graphqlResponse.json();
+        const graphqlData = await graphqlResponse.json();
         // console.log(graphqlData)
         const ordersData = graphqlData.data.orders.data.edges.map((edge: any) => edge.node);
         isNextPageAvailable = graphqlData.data.orders.data.pageInfo.hasNextPage;
         nextPageCursor = graphqlData.data.orders.data.pageInfo.endCursor;
-        console.log(ordersData)
         console.log(isNextPageAvailable)
         console.log(nextPageCursor)
         
         logger.info(`Orders get from shiphero on ${ordersToDate.toISOString()}` ,ordersData)
-        // try {
+        try {
           const result = await insertCompleteOrder(ordersData)
           console.log(result)
           logger.info(result)
-          orderInsertionResponse.push(result)
-          // return NextResponse.json(result);
-        // }
-        // catch (error) {
-        //   console.log(error)
-        //   // return NextResponse.json(error);     
-        //   //logger.error(error)
-        // }
-    } while (isNextPageAvailable);
-    console.log(orderInsertionResponse)
-
-    return NextResponse.json(orderInsertionResponse);
-    
+          return NextResponse.json(result);
+        }
+        catch (error) {
+          console.log(error)
+          return NextResponse.json(error);     
+          //logger.error(error)
+        }
+    // } while (isNextPageAvailable);
     
     // return NextResponse.json(ordersData);
   } catch (error : any) {
