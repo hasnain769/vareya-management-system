@@ -29,10 +29,12 @@ export async function POST(req: NextRequest) {
     // Extract the access token from the refresh response
     const refreshData = await refreshResponse.json();
     const accessToken = refreshData.access_token;
+    logger.info("access token :",accessToken);
 
     const currentTime = new Date();
     const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
+    logger.info("orders from date :", ordersFromDate.toISOString(),"to date :", ordersToDate.toISOString());
 
     console.log(ordersFromDate.toISOString())
     console.log(ordersToDate.toISOString())
@@ -100,7 +102,6 @@ export async function POST(req: NextRequest) {
 
     // Make a POST request to the GraphQL API endpoint with the access token in the header
     const graphqlResponse = await fetch("https://public-api.shiphero.com/graphql", {
-      cache: 'no-store', 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,17 +122,17 @@ export async function POST(req: NextRequest) {
     console.log(ordersData)
     
     logger.info(`Orders get from shiphero on ${ordersToDate.toISOString()}` ,ordersData)
-    try {
-      const result = await insertCompleteOrder(ordersData)
-      console.log(result)
-      logger.info(result)
-      return NextResponse.json(result);
-    }
-    catch (error) {
-      console.log(error)
-      return NextResponse.json(error);     
-      //logger.error(error)
-    }
+    // try {
+    //   const result = await insertCompleteOrder(ordersData)
+    //   console.log(result)
+    //   logger.info(result)
+    //   return NextResponse.json(result);
+    // }
+    // catch (error) {
+    //   console.log(error)
+    //   return NextResponse.json(error);     
+    //   //logger.error(error)
+    // }
     
     // return NextResponse.json(ordersData);
   } catch (error : any) {
