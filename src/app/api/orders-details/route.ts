@@ -125,17 +125,17 @@ export async function POST(req: NextRequest) {
     console.log(ordersData)
     
     logger.info(`Orders get from shiphero on ${ordersToDate.toISOString()}` ,ordersData)
-    // try {
-    //   const result = await insertCompleteOrder(ordersData)
-    //   console.log(result)
-    //   logger.info(result)
-    //   return NextResponse.json(result);
-    // }
-    // catch (error) {
-    //   console.log(error)
-    //   return NextResponse.json(error);     
-    //   //logger.error(error)
-    // }
+    try {
+      const result = await insertCompleteOrder(ordersData)
+      console.log(result)
+      logger.info(result)
+      return NextResponse.json(result);
+    }
+    catch (error) {
+      console.log(error)
+      return NextResponse.json(error);     
+      //logger.error(error)
+    }
     
     // return NextResponse.json(ordersData);
   } catch (error : any) {
