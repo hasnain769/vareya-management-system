@@ -21,14 +21,16 @@ export async function POST(req: NextRequest) {
         refresh_token: refreshToken
       })
     });
+    console.log(refreshResponse)
 
     // Check if the refresh request was successful
-    if (!refreshResponse.ok) {
-      throw new Error(`Failed to refresh access token: ${refreshResponse.statusText}`);
-    }
-
+    // if (!refreshResponse.ok) {
+    //   throw new Error(`Failed to refresh access token: ${refreshResponse.statusText}`);
+    // }
+    console.log("token refreshed")
     // Extract the access token from the refresh response
     const refreshData = await refreshResponse.json();
+    console.log("access token: " ,refreshData)
     const accessToken = refreshData.access_token;
     logger.info("access token :",accessToken);
     const currentTime = new Date();
