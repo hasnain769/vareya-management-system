@@ -3,7 +3,7 @@ import { date } from 'drizzle-orm/mysql-core';
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/utils/logger';
 
-
+export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   console.log("order fetching start")
   try {
@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
     const refreshData = await refreshResponse.json();
     const accessToken = refreshData.access_token;
     logger.info("access token :",accessToken);
-
     const currentTime = new Date();
     const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
