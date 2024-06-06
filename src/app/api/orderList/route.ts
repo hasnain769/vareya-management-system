@@ -3,7 +3,7 @@ import db from '@/database/dbClient';
 import { Order, order } from '@/database/schema';
 import { desc } from 'drizzle-orm';
 
-// export const maxDuration = 45;
+//  export const maxDuration = 45;
 // export const dynamic = 'force-dynamic';
 
 // GET

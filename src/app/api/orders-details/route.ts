@@ -6,6 +6,7 @@ import { logger } from '@/utils/logger';
 export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   console.log("order fetching start")
+  console.log("start function")
   try {
     // Define the refresh token
     const refreshToken = process.env.SHIPHERO_REFRESH_TOKEN
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     const ordersFromDate = new Date(currentTime.getTime() - 17 * 60000); // Subtract 15 minutes from current time
     const ordersToDate = currentTime;
     logger.info("orders from date :", ordersFromDate.toISOString(),"to date :", ordersToDate.toISOString());
+    console.log(accessToken)
 
     console.log(ordersFromDate.toISOString())
     console.log(ordersToDate.toISOString())
