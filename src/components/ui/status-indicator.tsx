@@ -2,7 +2,6 @@ import { getShippedStatus ,getPickStatus, getallStatuses } from "@/database/dbOp
 
 
 async function getStatuses(id : any ,orderNumber : any){
-  const pick = await getPickStatus(orderNumber as number)
   const statuses = await getallStatuses(id as string)
   console.log(statuses)
   return  statuses
@@ -71,7 +70,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = async  ({ id, can
       <div className="absolute right-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-r-4 border-t-transparent border-r-transparent border-l-4 border-l-gray-200 dark:border-l-gray-700 rounded-r-[24px]" />
     </div>
   </div>
-<div className={`relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] ${statuses.some(status => status.status_name === 'packed Out') ? "bg-blue-500 text-white" : " bg-gray-200"} bg-gray-200 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400`}>
+<div className={`relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] ${statuses.some(status => status.status_name === 'packed Out') ? "bg-blue-500 text-white" : " bg-gray-200"} text-sm font-medium text-gray-500 `}>
     <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-gray-200 dark:border-r-gray-700" />
     <div className="flex items-center justify-center h-full">
       <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-gray-200 dark:border-r-gray-700" />
