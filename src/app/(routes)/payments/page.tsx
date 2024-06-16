@@ -1,9 +1,7 @@
-
-import { useEffect, useState } from "react";
-import ReactPaginate from "react-paginate";
 import { getAllPaymentsData } from "@/database/dbOperations";
-import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { PaymentType } from "@/database/schema";
+
 import Payments from '@/app/screens/payments'
 async function getPaymentsData() {
   const paymentsData = await getAllPaymentsData();
@@ -16,3 +14,4 @@ export default async function PaymentsPage() {
   <Payments payments = {data}></Payments>
 
   }
+

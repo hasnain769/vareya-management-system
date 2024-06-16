@@ -501,6 +501,14 @@ export async function getPickStatus(orderNumber : any) {
   return results;
 }
 
+export async function getallStatuses(id : any) {
+  const results = await db.select().from(order_statuses).where(eq(order_statuses.order_id, id)).execute();
+  console.log(results)
+  return results
+
+
+}
+
 export async function getLineItems(orderId: any ) {
   console.log(orderId);
   
