@@ -4,14 +4,23 @@ import { PaymentType } from "@/database/schema";
 
 import Payments from '@/app/screens/Payments'
 async function getPaymentsData() {
+  console.log("first")
   const paymentsData = await getAllPaymentsData();
+  
   console.log(paymentsData)
   return paymentsData as []
 }
 
 export default async function PaymentsPage() {
   const data = await getPaymentsData();
-  <Payments payments = {data}></Payments>
+  console.log(data)
+ 
+  return (
+    <div className="w-full" >
+
+      <Payments payments = {data}></Payments>
+    </div>
+  )
 
   }
 
