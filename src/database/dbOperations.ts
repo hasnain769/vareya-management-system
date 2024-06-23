@@ -241,7 +241,7 @@ export async function insertTote(data: any): Promise<void> {
                       total_price: parseFloat(ord.total_price!) as any, 
                       total_discounts: parseFloat(ord.total_discounts!) as any,
                       payments_id : paymentsResponse[0].id,
-                    //  holds_id: holdsId[0].id ,
+                      holds_id: holdsId[0].id ,
                       shipping_address_id: addressResponse[0].id,
                       customer_id: customerResponse[0].id
                   };
