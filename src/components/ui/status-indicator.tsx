@@ -35,7 +35,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = async  ({ id, can
             <div className="absolute right-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-r-4 border-t-transparent border-r-transparent border-l-4 border-l-green-500 rounded-r-[24px]" />
           </div>
         </div>
-        <div className="relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] bg-green-500 text-sm font-medium text-white">
+        <div className="relative flex items-center justify-center w-full max-w-md h-8 rounded-r-[24px] bg-yellow-400 text-sm font-medium text-white">
         <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-green-500" />
         <div className="flex items-center justify-center h-full">
           <div className="absolute left-0 top-1/2 w-0 h-0 -translate-y-1/2 border-t-4 border-l-4 border-t-transparent border-l-transparent border-r-4 border-r-green-500" />
