@@ -508,7 +508,13 @@ export async function getallStatuses(id : any) {
 
 
 }
+export async function getHoldsInfo(holdsId : any) {
+  const results = await db.select().from(holds).where(eq(holds.id, holdsId)).execute();
+  console.log(results)
+  return results
 
+
+}
 export async function getLineItems(orderId: any ) {
   console.log(orderId);
   

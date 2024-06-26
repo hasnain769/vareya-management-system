@@ -130,7 +130,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = async (orderDetailProps) => {
     </div>
 
     {/* Status Indicator */}
-    <StatusIndicator id ={item.legacy_id as any} cancel ={item.fulfillment_status as any} orderNumber={item.order_number}/>
+    <StatusIndicator id ={item.legacy_id as any} cancel ={item.fulfillment_status as any} holdsId={item.holds_id}/>
     
     {/* Totals Panel */}
       <div className="flex flex-col lg:flex-row">
